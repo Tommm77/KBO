@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { Icon } from '@rneui/themed';
 
 const SearchBar = ({ onSearch }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -23,8 +24,8 @@ const SearchBar = ({ onSearch }) => {
         onChangeText={handleChange}
       />
       <TouchableOpacity style={styles.button} onPress={handleSearch}>
-        <Text style={styles.buttonText}>Rechercher</Text>
-      </TouchableOpacity>
+        <Icon name="search" color="white" />
+      </TouchableOpacity>      
     </View>
   );
 };
