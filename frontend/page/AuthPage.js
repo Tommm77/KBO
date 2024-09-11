@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { data_profils } from '../data/profils'; // Assurez-vous que le chemin est correct
 
 const AuthPage = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -12,11 +13,18 @@ const AuthPage = ({ navigation }) => {
       return;
     }
 
-    // Logique de connexion ou d'inscription
     if (isLogin) {
-      navigation.navigate('Home'); // Logique de connexion
+      // Logique de connexion
+      const user = data_profils.find(profile => profile.email === email && profile.password === password);
+      
+      if (user) {
+        navigation.navigate('Home'); // Connexion réussie
+      } else {
+        Alert.alert('Erreur', 'Adresse e-mail ou mot de passe incorrect.');
+      }
     } else {
-      Alert.alert('Inscription', 'Vous êtes maintenant inscrit.'); // Logique d'inscription
+      // Logique d'inscription (ici, nous simulerons simplement une inscription réussie)
+      Alert.alert('Inscription', 'Vous êtes maintenant inscrit.');
     }
   };
 
