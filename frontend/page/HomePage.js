@@ -27,7 +27,9 @@ const HomePage = ({ navigation }) => {
 
       {searchTerm ? (
           <EnterpriseList search={searchTerm} />
-        ) :(null)}
+        ) :(
+            null
+        )}
 
       <TouchableOpacity style={styles.button} onPress={() => { navigation.navigate('Profil'); }}>
         <Icon name="person" color="white" />
@@ -40,6 +42,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
+    marginBottom: 10
   },
   scrollViewContent: {
     flexGrow: 1,

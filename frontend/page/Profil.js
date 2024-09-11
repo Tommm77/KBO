@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import EnterpriseList from '../component/enterpriseList';
 
 const Profile = () => {
   const [name, setName] = useState('John Doe');
   const [email, setEmail] = useState('johndoe@example.com');
   const [phone, setPhone] = useState('123-456-7890');
   const [editable, setEditable] = useState(false);
-  const [favorites, setFavorites] = useState([
-    { id: 1, name: 'Entreprise A', description: 'Description A' },
-    { id: 2, name: 'Entreprise B', description: 'Description B' },
-    { id: 3, name: 'Entreprise C', description: 'Description C' },
-  ]);
 
   const handleSave = () => {
     Alert.alert('Profil modifié', 'Vos informations ont été mises à jour.');
@@ -67,16 +63,7 @@ const Profile = () => {
         {/* Section pour les entreprises favorites */}
         <View style={styles.favoritesSection}>
           <Text style={styles.sectionTitle}>Entreprises mises en favoris</Text>
-          {favorites.length > 0 ? (
-            favorites.map((favorite) => (
-              <View key={favorite.id} style={styles.card}>
-                <Text style={styles.cardTitle}>{favorite.name}</Text>
-                <Text style={styles.cardDescription}>{favorite.description}</Text>
-              </View>
-            ))
-          ) : (
-            <Text>Aucune entreprise mise en favoris.</Text>
-          )}
+          <EnterpriseList search={""} />
         </View>
       </ScrollView>
     </View>
