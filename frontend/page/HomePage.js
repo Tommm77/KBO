@@ -1,19 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import SearchBar from '../component/SearchBar';
 import { Icon } from '@rneui/themed';
+import EnterpriseCard from '../component/EnterpriseCard';
 
 const screenWidth = Dimensions.get('window').width;
 
 const HomePage = ({ navigation }) => {
+
+  const [searchTerm, setSearchTerm] = useState('');
+  
+    // Fonction pour gérer la recherche
+    const handleSearch = (query) => {
+        setSearchTerm(query);
+        // Vous pouvez également faire quelque chose avec le terme de recherche ici
+        console.log('Recherche:', query);
+    };
+  
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.header}>
           <Text style={styles.title}>Recherche d'Entreprises Belges</Text>
 
-          <SearchBar />
+          <SearchBar onSearch={handleSearch} />
         </View>
+
+        {searchTerm ? (
+          <EnterpriseCard search={searchTerm} />
+        ) :(null)}
       </ScrollView>
 
       <TouchableOpacity style={styles.button} onPress={() => { navigation.navigate('Profil'); }}>
@@ -34,7 +49,7 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 30,
   },
   title: {
     fontSize: 24,
