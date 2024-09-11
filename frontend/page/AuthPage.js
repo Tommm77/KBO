@@ -1,13 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { data_profils } from '../data/profils'; // Assurez-vous que le chemin est correct
+import { checkUserLoggedIn } from '../auth/checkUserLoggedIn';
 
 const AuthPage = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLogin, setIsLogin] = useState(true); // État pour alterner entre connexion et inscription
 
-  const handleSubmit = () => {
+  useEffect(() => {
+    const log = checkUserLoggedIn();
+    if (log) { navigation.navigate("Home")}
+  }, []);
+
+  const handleSubmit = async () => {
     if (!email || !password) {
       Alert.alert('Erreur', 'Veuillez entrer votre adresse e-mail et mot de passe.');
       return;
@@ -16,9 +23,15 @@ const AuthPage = ({ navigation }) => {
     if (isLogin) {
       // Logique de connexion
       const user = data_profils.find(profile => profile.email === email && profile.password === password);
-      
+      console.log(user)
       if (user) {
-        navigation.navigate('Home'); // Connexion réussie
+        // Stocker les informations de l'utilisateur dans AsyncStorage
+        try {
+          await AsyncStorage.setItem('user', JSON.stringify(user));
+          navigation.navigate('Home'); // Connexion réussie
+        } catch (error) {
+          Alert.alert('Erreur', 'Impossible de sauvegarder les informations utilisateur.');
+        }
       } else {
         Alert.alert('Erreur', 'Adresse e-mail ou mot de passe incorrect.');
       }
