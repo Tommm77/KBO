@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import HomePage from '../page/HomePage';
 import AuthPage from '../page/AuthPage'
 import Profile from '../page/Profil';
+import EnterpriseDetail from '../page/EnterpriseDetail';
 
 const Stack = createStackNavigator();
 
@@ -33,6 +34,10 @@ const AppNavigator = () => {
         <Stack.Screen
           name="Profil"
           component={Profile}
+        />
+        <Stack.Screen
+          name="Détail"
+          component={EnterpriseDetail}
         />
       </Stack.Navigator>
     </NavigationContainer>

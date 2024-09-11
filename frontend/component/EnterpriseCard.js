@@ -1,27 +1,22 @@
 import React from 'react';
-import {  View, Text, StyleSheet } from 'react-native';
-import { Card } from '@rneui/themed';
+import { Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native'; // Pour accéder à la fonction de navigation
 
-// Composant pour une seule entreprise (affichage compact dans une carte)
 const EnterpriseCard = ({ enterprise }) => {
-  // Récupérer l'activité principale
-  const mainActivity = enterprise.Activity.find(activity => activity.Classification === 'MAIN');
+  const navigation = useNavigation(); // Hook de navigation
+
+  const handlePress = () => {
+    // Naviguer vers la page de détails avec l'objet entreprise passé en paramètre
+    navigation.navigate('Détail', { enterprise });
+  };
 
   return (
-    <Card containerStyle={styles.card}>
-      <View style={styles.cardContent}>
-        <Text style={styles.title}>{enterprise.Denomination}</Text>
-        <Text style={styles.subtitle}>Numéro d'entreprise: {enterprise.EnterpriseNumber}</Text>
-        <Text style={styles.subtitle}>
-          Adresse: {enterprise.StreetNL} {enterprise.HouseNumber}, {enterprise.Zipcode} {enterprise.MunicipalityNL}
-        </Text>
-        {mainActivity && (
-          <Text style={styles.subtitle}>
-            Activité principale: {mainActivity.NaceCode}
-          </Text>
-        )}
-      </View>
-    </Card>
+    <TouchableOpacity onPress={handlePress} style={styles.card}>
+      <Text style={styles.title}>{enterprise.Denomination}</Text>
+      <Text style={styles.subtitle}>Numéro: {enterprise.EnterpriseNumber}</Text>
+      <Text style={styles.subtitle}>Activité: {enterprise.Activity.map(activity => activity.NaceCode).join(', ')}</Text>
+      {/* Ajoutez d'autres détails de l'entreprise ici */}
+    </TouchableOpacity>
   );
 };
 
@@ -30,10 +25,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     marginVertical: 10,
+    marginHorizontal: 20,
     backgroundColor: '#f8f9fa', // Couleur de fond claire pour le contraste
-  },
-  cardContent: {
-    flexDirection: 'column',
+    borderColor: '#6200EE', // Couleur de la bordure
+    borderWidth: 1, // Épaisseur de la bordure
   },
   title: {
     fontSize: 16,
@@ -47,6 +42,5 @@ const styles = StyleSheet.create({
     color: '#555',
   },
 });
-
 
 export default EnterpriseCard;

@@ -59,14 +59,14 @@ const Profile = () => {
             <Text style={styles.logoutButtonText}>Déconnexion</Text>
           </TouchableOpacity>
         </View>
-
-        {/* Section pour les entreprises favorites */}
-        <View style={styles.favoritesSection}>
-          <Text style={styles.sectionTitle}>Entreprises mises en favoris</Text>
-          <EnterpriseList search={""} />
-        </View>
       </ScrollView>
+
+      <View style={styles.favoritesSection}>
+          <Text style={styles.sectionTitle}>Entreprises mises en favoris</Text>
+      </View>
+      <EnterpriseList style={styles.favList} search={""} />
     </View>
+    
   );
 };
 
@@ -78,6 +78,7 @@ const styles = StyleSheet.create({
   scrollViewContent: {
     flexGrow: 1,
     padding: 20,
+    marginBottom: 150
   },
   input: {
     height: 40,
@@ -100,10 +101,6 @@ const styles = StyleSheet.create({
     borderRadius: 20, // Coins arrondis
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
     elevation: 6,
     flex: 1, // Prend toute la largeur
     marginRight: 10,
@@ -128,33 +125,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   favoritesSection: {
-    marginTop: 30,
+    marginTop: 5,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  card: {
-    backgroundColor: '#fff',
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
-  },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
     marginBottom: 5,
   },
-  cardDescription: {
-    fontSize: 14,
-    color: '#555',
-  },
+  favList: {
+    marginTop: 10,
+    flex: 1
+  }
 });
 
 export default Profile;
