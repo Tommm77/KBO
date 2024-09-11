@@ -1,20 +1,37 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { Icon } from '@rneui/themed';
-import { RadioButton } from 'react-native-paper';
 
 const SearchBar = ({ onSearch }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchType, setSearchType] = useState('name'); // Par défaut, rechercher par nom
 
   // Fonction pour gérer les changements dans la barre de recherche
   const handleChange = (query) => {
-    setSearchQuery([query, searchType]);
+    setSearchQuery(query);
+  };
+
+  // Fonction pour détecter automatiquement le type de recherche
+  const detectSearchType = (query) => {
+    // Vérifier si c'est un numéro d'entreprise (format: "xxxx.xxx.xxx")
+    const isEnterpriseNumber = /^\d{4}\.\d{3}\.\d{3}$/.test(query);
+    if (isEnterpriseNumber) {
+      return 'id';
+    }
+
+    // Vérifier si c'est un code NACE (par exemple: "84130") ou une activité similaire
+    const isNaceCode = /^\d{4,5}$/.test(query);
+    if (isNaceCode) {
+      return 'activity';
+    }
+
+    // Sinon, on suppose que c'est un nom d'entreprise
+    return 'name';
   };
 
   // Fonction pour lancer la recherche
   const handleSearch = () => {
-    onSearch(searchQuery, searchType);
+    const detectedType = detectSearchType(searchQuery); // Détecte automatiquement le type de recherche
+    onSearch([searchQuery, detectedType]);
   };
 
   return (
@@ -29,44 +46,6 @@ const SearchBar = ({ onSearch }) => {
         <TouchableOpacity style={styles.button} onPress={handleSearch}>
           <Icon name="search" color="white" />
         </TouchableOpacity>
-      </View>
-      <View style={styles.radioContainer}>
-        <View style={styles.radioRow}>
-          <View style={styles.radioOption}>
-            <RadioButton
-              value="name"
-              status={searchType === 'name' ? 'checked' : 'unchecked'}
-              onPress={() => setSearchType('name')}
-            />
-            <Text style={styles.radioLabel}>Nom de l'entreprise</Text>
-          </View>
-          <View style={styles.radioOption}>
-            <RadioButton
-              value="id"
-              status={searchType === 'id' ? 'checked' : 'unchecked'}
-              onPress={() => setSearchType('id')}
-            />
-            <Text style={styles.radioLabel}>Numéro d'entreprise</Text>
-          </View>
-        </View>
-        <View style={styles.radioRow}>
-          <View style={styles.radioOption}>
-            <RadioButton
-              value="activity"
-              status={searchType === 'activity' ? 'checked' : 'unchecked'}
-              onPress={() => setSearchType('activity')}
-            />
-            <Text style={styles.radioLabel}>Activité</Text>
-          </View>
-          <View style={styles.radioOption}>
-            <RadioButton
-              value="address"
-              status={searchType === 'address' ? 'checked' : 'unchecked'}
-              onPress={() => setSearchType('address')}
-            />
-            <Text style={styles.radioLabel}>Adresse</Text>
-          </View>
-        </View>
       </View>
     </View>
   );
@@ -107,27 +86,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5, // Ajout de l'ombre
-  },
-  radioContainer: {
-    marginTop: 20,
-    width: '100%',
-    alignItems: 'center',
-  },
-  radioRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    marginBottom: 10,
-  },
-  radioOption: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '45%', // Ajustez la largeur pour un meilleur espacement
-  },
-  radioLabel: {
-    marginLeft: 8,
-    fontSize: 14,
-    color: '#555',
   },
 });
 
