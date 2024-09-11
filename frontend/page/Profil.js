@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import EnterpriseList from '../component/enterpriseList';
+import logout from '../auth/logOut';
 
-const Profile = () => {
+const Profile = ({navigation}) => {
   const [name, setName] = useState('John Doe');
   const [email, setEmail] = useState('johndoe@example.com');
   const [phone, setPhone] = useState('123-456-7890');
@@ -14,6 +15,7 @@ const Profile = () => {
   };
 
   const handleLogout = () => {
+    logout(navigation);
     Alert.alert('Déconnexion', 'Vous avez été déconnecté.');
   };
 
