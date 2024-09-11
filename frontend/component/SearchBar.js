@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     borderRadius: 25, // Bord arrondi
     paddingHorizontal: 20,
     backgroundColor: '#fff',
-    fontSize: 16,
+    fontSize: 14,
     marginRight: 10,
   },
   button: {
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
   },
 });
