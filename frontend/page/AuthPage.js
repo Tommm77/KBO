@@ -1,6 +1,5 @@
-// screens/AuthPage.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 
 const AuthPage = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -13,20 +12,18 @@ const AuthPage = ({ navigation }) => {
       return;
     }
 
-    // Ajoutez ici la logique pour se connecter ou s'inscrire
+    // Logique de connexion ou d'inscription
     if (isLogin) {
-      // Logique de connexion
-      navigation.navigate('Home');
+      navigation.navigate('Home'); // Logique de connexion
     } else {
-      // Logique d'inscription
-      Alert.alert('Inscription', 'Vous êtes maintenant inscrit.');
+      Alert.alert('Inscription', 'Vous êtes maintenant inscrit.'); // Logique d'inscription
     }
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{isLogin ? 'Connexion' : 'Inscription'}</Text>
-      
+
       <TextInput
         style={styles.input}
         placeholder="Adresse e-mail"
@@ -42,13 +39,13 @@ const AuthPage = ({ navigation }) => {
         onChangeText={setPassword}
         secureTextEntry
       />
-      
-      <Button
-        title={isLogin ? 'Se connecter' : 'S\'inscrire'}
-        onPress={handleSubmit}
-        color="#6200EE"
-      />
 
+      {/* Bouton avec styles personnalisés */}
+      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+        <Text style={styles.buttonText}>{isLogin ? 'Se connecter' : 'S\'inscrire'}</Text>
+      </TouchableOpacity>
+
+      {/* Lien pour basculer entre connexion et inscription */}
       <Text style={styles.switchText} onPress={() => setIsLogin(!isLogin)}>
         {isLogin ? 'Pas encore inscrit ? Inscrivez-vous' : 'Déjà inscrit ? Connectez-vous'}
       </Text>
@@ -61,26 +58,47 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#f0f0f0',
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 40,
+    color: '#333',
   },
   input: {
-    height: 40,
-    borderColor: '#ddd',
+    height: 50,
+    borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginBottom: 15,
+    borderRadius: 25,
+    paddingHorizontal: 20,
+    marginBottom: 20,
+    backgroundColor: '#fff',
+    fontSize: 16,
+  },
+  button: {
+    backgroundColor: '#6200EE', // Couleur personnalisée pour le bouton
+    paddingVertical: 15,
+    borderRadius: 30, // Rendre les boutons arrondis
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 5, // Ajoute une ombre pour un effet surélevé (uniquement sur Android)
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   switchText: {
     textAlign: 'center',
     color: '#6200EE',
     marginTop: 20,
+    fontSize: 16,
+    textDecorationLine: 'underline',
   },
 });
 

@@ -16,7 +16,6 @@ const HomePage = () => {
         <Text style={styles.title}>Recherche d'Entreprises Belges</Text>
 
         <SearchBar />
-       
       </View>
     </ScrollView>
   );

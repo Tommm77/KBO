@@ -1,12 +1,10 @@
 // AppNavigator.js
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import HomePage from '../page/HomePage';
 import InfoPage from '../page/InfoPage';
-import AuthPage from '../page/AuthPage';
-import Header from '../component/header';
+import AuthPage from '../page/AuthPage'
 
 const Stack = createStackNavigator();
 
@@ -25,17 +23,17 @@ const AppNavigator = () => {
         <Stack.Screen
           name="Home"
           component={HomePage}
-          options={{ title: 'Accueil', headerShown: false }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="InfoPage"
           component={InfoPage}
-          options={{ title: 'Information' }}
+          options={{ title: 'InfoPage' }}
         />
          <Stack.Screen
           name="AuthPage"
           component={AuthPage}
-          options={{ title: 'AuthPage', headerShown: false }}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>
