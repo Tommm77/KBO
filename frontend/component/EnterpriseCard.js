@@ -1,79 +1,52 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import React from 'react';
+import {  View, Text, StyleSheet } from 'react-native';
+import { Card } from '@rneui/themed';
 
-const EnterpriseCard = ({ search }) => {
-  const [data, setData] = useState('hello');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!search) return; // Ne pas faire de requête si la recherche est vide
-
-      setLoading(true);
-      setData(search);
-      setLoading(false);
-    };
-
-    fetchData();
-  }, [search]); // Refaire la requête lorsque le terme de recherche change
-
-  if (loading) {
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#6200EE" />
-      </View>
-    );
-  }
-
-  if (error) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>{error}</Text>
-      </View>
-    );
-  }
-
-  if (!data) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>Aucune donnée disponible</Text>
-      </View>
-    );
-  }
+// Composant pour une seule entreprise (affichage compact dans une carte)
+const EnterpriseCard = ({ enterprise }) => {
+  // Récupérer l'activité principale
+  const mainActivity = enterprise.Activity.find(activity => activity.Classification === 'MAIN');
 
   return (
-    <View style={styles.card}>
-      <Text style={styles.description}>{ search }</Text>
-    </View>
+    <Card containerStyle={styles.card}>
+      <View style={styles.cardContent}>
+        <Text style={styles.title}>{enterprise.Denomination}</Text>
+        <Text style={styles.subtitle}>Numéro d'entreprise: {enterprise.EnterpriseNumber}</Text>
+        <Text style={styles.subtitle}>
+          Adresse: {enterprise.StreetNL} {enterprise.HouseNumber}, {enterprise.Zipcode} {enterprise.MunicipalityNL}
+        </Text>
+        {mainActivity && (
+          <Text style={styles.subtitle}>
+            Activité principale: {mainActivity.NaceCode}
+          </Text>
+        )}
+      </View>
+    </Card>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
   card: {
-    width: '100%',
-    padding: 20,
     borderRadius: 10,
-    backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
-    marginBottom: 20,
+    padding: 10,
+    marginVertical: 10,
+    backgroundColor: '#f8f9fa', // Couleur de fond claire pour le contraste
   },
-  description: {
+  cardContent: {
+    flexDirection: 'column',
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 6,
+    color: '#333',
+  },
+  subtitle: {
     fontSize: 14,
+    marginBottom: 4,
     color: '#555',
   },
-  errorText: {
-    fontSize: 16,
-    color: 'red',
-  },
 });
+
 
 export default EnterpriseCard;

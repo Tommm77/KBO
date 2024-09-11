@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import { View, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import SearchBar from '../component/SearchBar';
 import { Icon } from '@rneui/themed';
-import EnterpriseCard from '../component/EnterpriseCard';
+import EnterpriseList from '../component/enterpriseList';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -23,11 +23,11 @@ const HomePage = ({ navigation }) => {
         <View style={styles.header}>
           <SearchBar onSearch={handleSearch} />
         </View>
-
-        {searchTerm ? (
-          <EnterpriseCard search={searchTerm} />
-        ) :(null)}
       </ScrollView>
+
+      {searchTerm ? (
+          <EnterpriseList search={searchTerm} />
+        ) :(null)}
 
       <TouchableOpacity style={styles.button} onPress={() => { navigation.navigate('Profil'); }}>
         <Icon name="person" color="white" />
