@@ -44,7 +44,7 @@ const EnterpriseCard = ({ search }) => {
 
   return (
     <View style={styles.card}>
-      <Text style={styles.description}>{ search }</Text>
+      <Text style={styles.description}>{ search[0] }</Text>
     </View>
   );
 };

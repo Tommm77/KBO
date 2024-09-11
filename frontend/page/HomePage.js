@@ -21,8 +21,6 @@ const HomePage = ({ navigation }) => {
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.header}>
-          <Text style={styles.title}>Recherche d'Entreprises Belges</Text>
-
           <SearchBar onSearch={handleSearch} />
         </View>
 
@@ -49,7 +47,9 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: 30,
+    marginTop: 150
   },
   title: {
     fontSize: 24,
