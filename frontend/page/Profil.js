@@ -11,15 +11,6 @@ const Profile = ({navigation}) => {
   const [editable, setEditable] = useState(false);
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const userData = await getUserData();
-      setUser(userData);
-    };
-
-    fetchData(); // Appel à la fonction pour récupérer les données utilisateur
-  }, []);
-
   const handleSave = () => {
     Alert.alert('Profil modifié', 'Vos informations ont été mises à jour.');
     setEditable(false);
