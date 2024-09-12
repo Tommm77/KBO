@@ -69,7 +69,6 @@ const SearchBar = ({ onSearch }) => {
     onSearch(searchParams);
   };
   
-
   return (
     <View style={styles.container}>
       <View style={styles.containerBar}>
@@ -147,10 +146,10 @@ const SearchBar = ({ onSearch }) => {
           </View>
         ) : null}
       </View>
-
+        {/* temporaire pour test */}
       <TouchableOpacity style={styles.button} onPress={handleSearch}>
-                <Icon name="search" color="white" />
-              </TouchableOpacity>
+        <Icon name="search" color="white" />
+      </TouchableOpacity>
 
       {/* Section des boutons radio */}
       <View style={styles.radioContainer}>

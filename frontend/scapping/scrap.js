@@ -1,37 +1,56 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 
-const url = 'https://kbopub.economie.fgov.be/kbopub/toonondernemingps.html?lang=fr&ondernemingsnummer=787277635';
-// Fonction pour scrapper les données d'une URL
-async function scrapeData(url) {
-    try {
-      // Envoyer une requête GET à l'URL
-      const { data } = await axios.get(url, {
-        headers: {
-          'Accept-Language': 'fr' // Demander la page en français
+// Fonction pour scraper les données
+export const scrapeData = async () => {
+  const url = 'https://kbopub.economie.fgov.be/kbopub/toonondernemingps.html?lang=fr&ondernemingsnummer=787277635'; // Remplace par l'URL cible
+  try {
+    // Récupérer le contenu HTML de la page
+    const { data } = await axios.get(url);
+    
+    // Charger le HTML dans cheerio
+    const $ = cheerio.load(data);
+    
+    // Initialiser les variables pour extraire les bonnes sections
+    let isInFunctionsSection = false;
+    let results = [];
+
+    // Sélectionner toutes les balises <tr> pour parcourir chaque ligne
+    $('tr').each((index, element) => {
+      // Sélectionner tous les <td> de la ligne actuelle
+      const tds = $(element).find('td');
+      if (tds.length > 0) {
+        // Récupérer le texte de chaque <td>
+        const rowContent = tds.map((i, td) => $(td).text().replace(/\s+/g, ' ').trim()).get();
+        
+        // Filtrer pour éviter les valeurs vides ou espaces inutiles
+        const filteredContent = rowContent.filter(text => text !== '' && text !== '&nbsp;');
+
+        // Si la ligne contient "Fonctions", commencer la capture
+        if (filteredContent.join(' ').includes('Fonctions')) {
+          isInFunctionsSection = true;
+          return;  // Ignorer le titre "Fonctions"
         }
-      });
-  
-      // Charger le HTML reçu dans cheerio pour l'exploiter comme jQuery
-      const $ = cheerio.load(data);
-  
-      // Sélectionner les éléments à scrapper (par exemple, les titres d'article dans un blog)
-      const articles = [];
-  
-      $('td').each((index, element) => {
-        // Extraire le titre et l'URL de chaque article
-        const title = $(element).text();
-        const link = $(element).attr('href');
-  
-        // Ajouter les données à la liste
-        articles.push({ title, link });
-      });
-  
-      // Afficher les résultats
-      console.log(articles);
-    } catch (error) {
-      console.error(`Erreur lors du scraping de ${url}:`, error.message);
-    }
+
+        // Si la ligne contient "Capacités entrepreneuriales", arrêter la capture
+        if (filteredContent.join(' ').includes('Capacités entrepreneuriales')) {
+          isInFunctionsSection = false;
+        }
+
+        // Ajouter la ligne à la capture si on est dans la section "Fonctions"
+        if (isInFunctionsSection && filteredContent.length > 0) {
+          // Récupérer les informations dans le bon format
+          const [fonction, name, date] = filteredContent; // On suppose ici que les 3 colonnes existent dans cet ordre
+          results.push({ fonction, name, date });
+        }
+      }
+    });
+
+    // Retourner la variable contenant les informations dans le bon format
+    return results;
+
+  } catch (error) {
+    console.error('Erreur lors du scraping :', error);
+    return [];
   }
-  
-  scrapeData(url);
+};
