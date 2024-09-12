@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderColor: '#ddd',
     borderWidth: 1,
-    borderRadius: 20,
+    borderRadius: 10,
   },
   fieldLabel: {
     fontSize: 16,
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: '#ddd',
     borderWidth: 1,
-    borderRadius: 20, // Coins arrondis
+    borderRadius: 10, // Coins arrondis
     marginBottom: 20,
     paddingHorizontal: 15,
     backgroundColor: '#fff',
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#6200EE', // Couleur du bouton
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 20, // Coins arrondis
+    borderRadius: 10, // Coins arrondis
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 6,
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF0000',
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 20, // Coins arrondis
+    borderRadius: 10, // Coins arrondis
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1, // Prend toute la largeur

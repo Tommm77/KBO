@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#6200EE', // Couleur personnalisée du bouton
     paddingVertical: 20, // Augmentez cette valeur pour un bouton plus haut
     paddingHorizontal: 20, // Augmentez cette valeur pour un bouton plus large
-    borderRadius: 30, // Augmentez cette valeur pour des coins plus arrondis
+    borderRadius: 10, // Augmentez cette valeur pour des coins plus arrondis
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',

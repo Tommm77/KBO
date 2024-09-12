@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 25,
+    borderRadius: 10,
     paddingHorizontal: 20,
     marginBottom: 20,
     backgroundColor: '#fff',
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#6200EE', // Couleur personnalisée pour le bouton
     paddingVertical: 15,
-    borderRadius: 30, // Rendre les boutons arrondis
+    borderRadius: 10, // Rendre les boutons arrondis
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,

@@ -47,12 +47,17 @@ const SearchBar = ({ onSearch }) => {
     <View style={styles.container}>
       <View style={styles.containerBar}>
         {selectedOption === 'name/id' ? (
-          <TextInput
-            style={styles.input}
-            placeholder="Rechercher une entreprise par nom ou ID"
-            value={searchQuery}
-            onChangeText={handleChange}
-          />
+            <View style={styles.row}>
+              <TextInput
+                style={styles.input}
+                placeholder="Rechercher une entreprise par nom ou ID"
+                value={searchQuery}
+                onChangeText={handleChange}
+              />
+              <TouchableOpacity style={styles.button} onPress={handleSearch}>
+                <Icon name="search" color="white" />
+              </TouchableOpacity>
+        </View>
         ) : selectedOption === 'activité' ? (
           <View style={styles.row}>
             <Dropdown
@@ -132,9 +137,6 @@ const SearchBar = ({ onSearch }) => {
             <Text style={styles.radioText}>adresse</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.button} onPress={handleSearch}>
-          <Icon name="search" color="white" />
-        </TouchableOpacity>
       </View>
     </View>
   );
@@ -156,10 +158,11 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
+    width: "80%",
     height: 45,
     borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 25,
+    borderRadius: 10,
     paddingHorizontal: 20,
     backgroundColor: '#fff',
     fontSize: 14,
@@ -170,7 +173,7 @@ const styles = StyleSheet.create({
     height: 45,
     borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 25,
+    borderRadius: 10,
     paddingHorizontal: 20,
     backgroundColor: '#fff',
     fontSize: 14,
@@ -180,7 +183,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#6200EE',
     paddingVertical: 12,
     paddingHorizontal: 20,
-    borderRadius: 25,
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
@@ -224,7 +227,7 @@ const styles = StyleSheet.create({
     width: 120,
     borderColor: 'gray',
     borderWidth: 0.5,
-    borderRadius: 25, // Coins arrondis
+    borderRadius: 10, // Coins arrondis
     paddingHorizontal: 8,
     marginRight: 10, // Espacement entre le picker et la barre de recherche
     backgroundColor: '#fff',
