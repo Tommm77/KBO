@@ -1,13 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import EnterpriseList from '../component/enterpriseList';
 import logout from '../auth/logOut';
+import { getUserData } from '../auth/getProfil';
 
 const Profile = ({navigation}) => {
   const [name, setName] = useState('John Doe');
   const [email, setEmail] = useState('johndoe@example.com');
   const [phone, setPhone] = useState('123-456-7890');
   const [editable, setEditable] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const userData = await getUserData();
+      setUser(userData);
+    };
+
+    fetchData(); // Appel à la fonction pour récupérer les données utilisateur
+  }, []);
 
   const handleSave = () => {
     Alert.alert('Profil modifié', 'Vos informations ont été mises à jour.');

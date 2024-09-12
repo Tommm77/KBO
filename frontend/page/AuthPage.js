@@ -2,17 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { data_profils } from '../data/profils'; // Assurez-vous que le chemin est correct
-import { checkUserLoggedIn } from '../auth/checkUserLoggedIn';
 
 const AuthPage = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLogin, setIsLogin] = useState(true); // État pour alterner entre connexion et inscription
-
-  useEffect(() => {
-    const log = checkUserLoggedIn();
-    if (log) { navigation.navigate("Home")}
-  }, []);
 
   const handleSubmit = async () => {
     if (!email || !password) {
