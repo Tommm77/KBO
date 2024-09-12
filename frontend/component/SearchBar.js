@@ -18,6 +18,11 @@ const SearchBar = ({ onSearch }) => {
   const [selectedAddress, setSelectedAddress] = useState('');
   const [isFocus, setIsFocus] = useState(false);
 
+  const static_address = [
+    { label: 'city', value: 'city' },
+    { label: 'zipcode', value: 'zipcode' }
+  ]
+
   const handleChange = (query) => {
     setSearchQuery(query);
   };
@@ -34,10 +39,24 @@ const SearchBar = ({ onSearch }) => {
   };
 
   const handleSearch = () => {
-    const detectedType = detectSearchType(searchQuery);
-    const searchParams = {
+    if (selectedOption === 'name/id') {
+      const detectedType = detectSearchType(searchQuery);
+      const searchParams = {
       searchQuery,
       searchType: detectedType,
+      };
+    }else if (selectedOption === 'activité') {
+      const searchParams = {
+      searchQuery,
+      searchType: 'activité',
+      Option: selectedActivity
+      };
+    }else if (selectedOption === 'adresse') {
+      const searchParams = {
+      searchQuery,
+      searchType: 'adresse',
+      Option: selectedAddress
+      };
     };
     console.log(searchParams)
     onSearch(searchParams);
@@ -96,7 +115,7 @@ const SearchBar = ({ onSearch }) => {
               selectedTextStyle={styles.selectedTextStyle}
               inputSearchStyle={styles.inputSearchStyle}
               iconStyle={styles.iconStyle}
-              data={data_activity}
+              data={static_address}
               search
               maxHeight={300}
               labelField="label"
