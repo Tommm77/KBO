@@ -61,7 +61,7 @@ const SearchBar = ({ onSearch }) => {
       };
     }
   
-    console.log(searchParams);
+    //console.log(searchParams);
     onSearch(searchParams);
   };
   
