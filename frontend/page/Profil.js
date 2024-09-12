@@ -1,19 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert, FlatList } from 'react-native';
 import EnterpriseList from '../component/enterpriseList';
 import logout from '../auth/logOut';
-import { getUserData } from '../auth/getProfil';
 
-const Profile = ({navigation}) => {
+const Profile = ({ navigation }) => {
   const [name, setName] = useState('John Doe');
   const [email, setEmail] = useState('johndoe@example.com');
   const [phone, setPhone] = useState('123-456-7890');
   const [editable, setEditable] = useState(false);
-  const [user, setUser] = useState(null);
 
   const handleSave = () => {
     Alert.alert('Profil modifié', 'Vos informations ont été mises à jour.');
-    setEditable(false);
+    setEditable(false); // Désactiver l'édition après la sauvegarde
   };
 
   const handleLogout = () => {
@@ -23,30 +21,58 @@ const Profile = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        <TextInput
-          style={styles.input}
-          value={name}
-          onChangeText={setName}
-          placeholder="Nom"
-          editable={editable}
-        />
-        <TextInput
-          style={styles.input}
-          value={email}
-          onChangeText={setEmail}
-          placeholder="Email"
-          keyboardType="email-address"
-          editable={editable}
-        />
-        <TextInput
-          style={styles.input}
-          value={phone}
-          onChangeText={setPhone}
-          placeholder="Téléphone"
-          keyboardType="phone-pad"
-          editable={editable}
-        />
+      
+      {/* Partie Profil (sans ScrollView) */}
+      <View style={styles.profileSection}>
+        {/* Affichage du nom */}
+        {editable ? (
+          <TextInput
+            style={styles.input}
+            value={name}
+            onChangeText={setName}
+            placeholder="Nom"
+            editable={editable}
+          />
+        ) : (
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldLabel}>Nom:</Text>
+            <Text style={styles.fieldValue}>{name}</Text>
+          </View>
+        )}
+
+        {/* Affichage de l'email */}
+        {editable ? (
+          <TextInput
+            style={styles.input}
+            value={email}
+            onChangeText={setEmail}
+            placeholder="Email"
+            keyboardType="email-address"
+            editable={editable}
+          />
+        ) : (
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldLabel}>Email:</Text>
+            <Text style={styles.fieldValue}>{email}</Text>
+          </View>
+        )}
+
+        {/* Affichage du téléphone */}
+        {editable ? (
+          <TextInput
+            style={styles.input}
+            value={phone}
+            onChangeText={setPhone}
+            placeholder="Téléphone"
+            keyboardType="phone-pad"
+            editable={editable}
+          />
+        ) : (
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldLabel}>Téléphone:</Text>
+            <Text style={styles.fieldValue}>{phone}</Text>
+          </View>
+        )}
 
         {/* Conteneur pour les boutons Modifier et Déconnexion */}
         <View style={styles.buttonRow}>
@@ -63,14 +89,17 @@ const Profile = ({navigation}) => {
             <Text style={styles.logoutButtonText}>Déconnexion</Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
-
-      <View style={styles.favoritesSection}>
-          <Text style={styles.sectionTitle}>Entreprises mises en favoris</Text>
       </View>
-      <EnterpriseList style={styles.favList} search={""} />
+
+      {/* Section des favoris avec Scroll */}
+      <View style={styles.favoritesSection}>
+        <Text style={styles.sectionTitle}>Entreprises mises en favoris</Text>
+        <View style={styles.favList}>
+          {/* Liste des entreprises en favoris */}
+          <EnterpriseList search={""} />
+        </View>
+      </View>
     </View>
-    
   );
 };
 
@@ -79,10 +108,26 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
-  scrollViewContent: {
-    flexGrow: 1,
+  profileSection: {
     padding: 20,
-    marginBottom: 150
+  },
+  fieldContainer: {
+    marginBottom: 20,
+    padding: 10,
+    backgroundColor: '#fff',
+    borderColor: '#ddd',
+    borderWidth: 1,
+    borderRadius: 20,
+  },
+  fieldLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 5,
+  },
+  fieldValue: {
+    fontSize: 16,
+    color: '#555',
   },
   input: {
     height: 40,
@@ -129,17 +174,19 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   favoritesSection: {
+    flex: 1,
     marginTop: 5,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 5,
+    paddingHorizontal: 20,
   },
   favList: {
-    marginTop: 10,
-    flex: 1
-  }
+    flex: 1,
+    paddingHorizontal: 20,
+  },
 });
 
 export default Profile;
