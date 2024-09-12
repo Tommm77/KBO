@@ -10,10 +10,10 @@ const EnterpriseList = ({ search }) => {
   const [error, setError] = useState(null);  // Gérer les erreurs de chargement
 
   useEffect(() => {
+    /*
     const fetchEnterprises = async () => {
       setLoading(true);
       setError(null);  // Réinitialiser l'erreur
-
       try {
         const response = await axios.get(`http://localhost:3000/entreprise/${search.searchType}/${search.searchQuery}`);
         setEnterprises(response.data);
@@ -26,13 +26,12 @@ const EnterpriseList = ({ search }) => {
         
     };
     fetchEnterprises();
-    /*
+    */
     setTimeout(() => {
       setEnterprises(data_enterprise);
       setLoading(false);  // Arrêter le chargement
     }, 2000);
-  */
-  }, [search.searchType, search.searchQuery]);  // Dépendances pour déclencher l'effet
+  }, []);  // Dépendances pour déclencher l'effet
 
   if (loading) {
     return (
