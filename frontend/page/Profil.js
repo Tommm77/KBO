@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert, FlatList } from 'react-native';
 import EnterpriseList from '../component/enterpriseList';
-import logout,  { updateUserData } from '../auth/logOut';
+import logout,  { updateUserData } from '../auth/authSystemStorage';
 import {getUserData} from "../auth/getProfil";
 import axios from "axios";
 
@@ -56,10 +56,25 @@ const Profile = ({ navigation }) => {
   };
 
 
-  const handleLogout = () => {
-    logout(navigation);
-    Alert.alert('Déconnexion', 'Vous avez été déconnecté.');
-  };
+  const handleLogout = async () => {
+    try {
+      // Supprimer les données de l'utilisateur
+      //await AsyncStorage.removeItem('user');
+      
+      // Afficher une alerte pour informer de la déconnexion
+      Alert.alert('Déconnexion', 'Vous avez été déconnecté avec succès.');
+  
+      // Naviguer vers l'écran d'authentification
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'AuthPage' }],  // Naviguer et réinitialiser l'historique pour éviter le retour en arrière
+      });
+  
+    } catch (error) {
+      console.error('Erreur lors de la déconnexion:', error);
+      Alert.alert('Erreur', 'Une erreur est survenue lors de la déconnexion.');
+    }
+  }
 
   return (
     <View style={styles.container}>

@@ -1,34 +1,28 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import SearchBar from '../component/SearchBar';
 import { Icon } from '@rneui/themed';
 import EnterpriseList from '../component/enterpriseList';
+import { checkUserLoggedIn } from '../auth/authSystemStorage';
 
 const HomePage = ({ navigation }) => {
-
   const [searchTerm, setSearchTerm] = useState('');
-  
-    // Fonction pour gérer la recherche
-    const handleSearch = (query) => {
-        setSearchTerm(query);
-        // Vous pouvez également faire quelque chose avec le terme de recherche ici
-        console.log('Recherche:', query);
-    };
+
+  useEffect(() => {
+    checkUserLoggedIn(navigation);
+  }, []);
   
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.header}>
-          <SearchBar onSearch={handleSearch} />
+          <SearchBar onSearch={setSearchTerm} />
         </View>
       </ScrollView>
-      
 
       {searchTerm ? (
-          <EnterpriseList search={searchTerm} />
-        ) :(
-            null
-        )}
+        <EnterpriseList search={searchTerm} />
+      ) : null}
 
       <TouchableOpacity style={styles.button} onPress={() => { navigation.navigate('Profil'); }}>
         <Icon name="person" color="white" />
@@ -41,7 +35,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
-    marginBottom: 10
+    marginBottom: 10,
   },
   scrollViewContent: {
     flexGrow: 1,
@@ -51,29 +45,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 30,
-    marginTop: 120
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginVertical: 100,
-    marginBottom: 50,
+    marginTop: 120,
   },
   button: {
     position: 'absolute',
-    bottom: 20, // Ajustez cette valeur pour l'espacement depuis le bas
-    right: 20, // Ajustez cette valeur pour l'espacement depuis la droite
-    backgroundColor: '#6200EE', // Couleur personnalisée du bouton
-    paddingVertical: 20, // Augmentez cette valeur pour un bouton plus haut
-    paddingHorizontal: 20, // Augmentez cette valeur pour un bouton plus large
-    borderRadius: 10, // Augmentez cette valeur pour des coins plus arrondis
+    bottom: 20,
+    right: 20,
+    backgroundColor: '#6200EE',
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.3,
     shadowRadius: 6,
-    elevation: 6, // Augmentez l'ombre pour correspondre à la taille du bouton
+    elevation: 6,
   },
   buttonText: {
     color: '#fff',

@@ -10,6 +10,7 @@ const EnterpriseList = ({ search }) => {
   const [error, setError] = useState(null);  // Gérer les erreurs de chargement
 
   useEffect(() => {
+    /*
     const fetchEnterprises = async () => {
       setLoading(true);
       setError(null);  // Réinitialiser l'erreur
@@ -37,12 +38,11 @@ const EnterpriseList = ({ search }) => {
         
     };
     fetchEnterprises();
-    /*
+    */
     setTimeout(() => {
       setEnterprises(data_enterprise);
       setLoading(false);  // Arrêter le chargement
     }, 2000);
-  */
   }, [search.searchQuery, search.searchType]);  // Dépendances pour déclencher l'effet
 
   if (loading) {

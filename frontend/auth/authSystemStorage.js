@@ -1,24 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
 
-export const logout = async (navigation) => {
-  try {
-    // Supprimer les données de l'utilisateur
-    await AsyncStorage.removeItem('user');
-    
-    // Afficher une alerte ou une notification si nécessaire
-    Alert.alert('Déconnexion', 'Vous avez été déconnecté avec succès.');
-
-    // Naviguer vers l'écran de connexion ou d'accueil
-    navigation.navigate('AuthPage');
-
-  } catch (error) {
-    console.error('Erreur lors de la déconnexion:', error);
-    Alert.alert('Erreur', 'Une erreur est survenue lors de la déconnexion.');
-  }
-};
-
-// Fonction pour mettre à jour les données de l'utilisateur
 export const updateUserData = async (updates) => {
   try {
     // Récupérer les données utilisateur existantes
@@ -32,7 +14,8 @@ export const updateUserData = async (updates) => {
         ...user,
         ...updates
       };
-      console.log(updatedUser)
+      console.log(updatedUser);
+
       // Sauvegarder les données mises à jour dans AsyncStorage
       await AsyncStorage.setItem('user', JSON.stringify(updatedUser));
 
@@ -43,5 +26,22 @@ export const updateUserData = async (updates) => {
   } catch (error) {
     console.error('Erreur lors de la mise à jour des données utilisateur:', error);
     Alert.alert('Erreur', 'Une erreur est survenue lors de la mise à jour des données utilisateur.');
+  }
+};
+
+export const checkUserLoggedIn = async (navigation) => {
+  try {
+    const user = await AsyncStorage.getItem('user');
+    if (user !== null) {
+      // L'utilisateur est connecté
+      console.log('Utilisateur connecté:', JSON.parse(user));
+      navigation.navigate('Home');
+    } else {
+      // Aucun utilisateur connecté
+      console.log('Aucun utilisateur connecté');
+      navigation.navigate('AuthPage'); // Naviguer vers l'écran de connexion si besoin
+    }
+  } catch (error) {
+    console.error('Erreur lors de la vérification de la connexion utilisateur:', error);
   }
 };
