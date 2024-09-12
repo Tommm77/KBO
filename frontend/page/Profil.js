@@ -13,6 +13,7 @@ const Profile = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [editable, setEditable] = useState(false);
+  const [nameunchanged, setNameunchanged] = useState('');
 
   // Fonction pour récupérer les données utilisateur
   const fetchUserLocalStorage = async () => {
@@ -23,6 +24,7 @@ const Profile = ({ navigation }) => {
         setName(user.name);
         setEmail(user.email);
         setPassword(user.password);
+        setNameunchanged(user.name);
       }
     } catch (error) {
       console.error('Erreur lors de la récupération des données utilisateur :', error);
@@ -35,16 +37,22 @@ const Profile = ({ navigation }) => {
   }, []);
 
   const handleSave = () => {
-    axios.patch(`http://localhost:3000/user/${name}`, { name, email, password })
+    console.log('Sauvegarde des informations utilisateur...');
+    console.log('Nom:', name);
+    console.log('Email:', email);
+    console.log('Mot de passe', password);
+    axios.patch(`http://localhost:3000/user/${nameunchanged}`, { name: name, email: email, password: password })
         .then(response => {
           console.log(response.data);
+          Alert.alert('Profil modifié', 'Vos informations ont été mises à jour.');
+          console.log('Profil mis à jour avec succès.');
+          setEditable(false); // Désactiver l'édition après la sauvegarde
         })
         .catch(error => {
           console.error('Erreur lors de la mise à jour du profil :', error);
         });
-    Alert.alert('Profil modifié', 'Vos informations ont été mises à jour.');
-    setEditable(false); // Désactiver l'édition après la sauvegarde
   };
+
 
   const handleLogout = () => {
     logout(navigation);
