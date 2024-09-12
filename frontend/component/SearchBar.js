@@ -48,16 +48,20 @@ const SearchBar = ({ onSearch }) => {
         searchType: detectedType,
       };
     } else if (selectedOption === 'activité') {
+      if (selectedActivity === ''){
+        return;
+      }
       searchParams = {
         searchQuery,
-        searchType: 'activité',
-        Option: selectedActivity,
+        searchType: selectedActivity,
       };
     } else if (selectedOption === 'adresse') {
+      if (selectedAddress === ''){
+        return;
+      }
       searchParams = {
         searchQuery,
-        searchType: 'adresse',
-        Option: selectedAddress,
+        searchType: selectedAddress,
       };
     }
   
@@ -143,6 +147,10 @@ const SearchBar = ({ onSearch }) => {
           </View>
         ) : null}
       </View>
+
+      <TouchableOpacity style={styles.button} onPress={handleSearch}>
+                <Icon name="search" color="white" />
+              </TouchableOpacity>
 
       {/* Section des boutons radio */}
       <View style={styles.radioContainer}>

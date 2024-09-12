@@ -97,7 +97,7 @@ export const  data_enterprise = [
 ]
 
 export const data_activity = [
-  { label: 'Item 1', value: '1' },
+  { label: 'Activités TVA', value: 'Activités TVA' },
   { label: 'Item 2', value: '2' },
   { label: 'Item 3', value: '3' },
   { label: 'Item 4', value: '4' },
