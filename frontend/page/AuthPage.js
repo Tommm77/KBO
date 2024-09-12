@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { data_profils } from '../data/profils'; // Assurez-vous que le chemin est correct
-import { checkUserLoggedIn } from '../auth/checkUserLoggedIn';
+import { useNavigation } from '@react-navigation/native'; // Pour accéder à la fonction de navigation
+
 
 const AuthPage = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -10,9 +11,26 @@ const AuthPage = ({ navigation }) => {
   const [isLogin, setIsLogin] = useState(true); // État pour alterner entre connexion et inscription
 
   useEffect(() => {
-    const log = checkUserLoggedIn();
-    if (log) { navigation.navigate("Home")}
+    const checkUserLoggedIn = async () => {
+      const navigation = useNavigation(); // Hook de navigation
+      try {
+        const user = await AsyncStorage.getItem('user');
+        if (user !== null) {
+          // Les données sont présentes, l'utilisateur est connecté
+          console.log('Utilisateur connecté:', JSON.parse(user));
+          navigation.navigate('Home');
+        } else {
+          // Les données ne sont pas présentes, l'utilisateur n'est pas connecté
+          console.log('Aucun utilisateur connecté');
+        }
+      } catch (error) {
+        console.error('Erreur lors de la vérification de la connexion utilisateur:', error);
+      }
+    };
+
+    checkUserLoggedIn();
   }, []);
+
 
   const handleSubmit = async () => {
     if (!email || !password) {

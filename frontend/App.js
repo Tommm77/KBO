@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import AppNavigator from './navigation/AppNavigator';
 
 const App = () => {
-  return (
+    return (
       <AppNavigator />
   );
 };
