@@ -116,11 +116,11 @@ app.get('/entreprise/city/:city', async (req, res) => {
     }
 });
 
-app.get('/user/:name', async (req, res) => {
+app.get('/user/:email', async (req, res) => {
 
-    const name = req.params.name;
+    const email = req.params.email;
     try {
-        const user = await db.collection('user').findOne({name: name});
+        const user = await db.collection('user').findOne({email: email});
         if (!user) {
             return res.status(404).json({message: 'User not found'});
         }
@@ -130,8 +130,11 @@ app.get('/user/:name', async (req, res) => {
     }
 });
 
+app.use(express.json());
+
 app.post('/user', async (req, res) => {
     const user = req.body;
+    console.log('Creating user:', req.body);
     try {
         await db.collection('user').insertOne(user);
         res.json(user);

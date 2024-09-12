@@ -1,15 +1,47 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert, FlatList } from 'react-native';
 import EnterpriseList from '../component/enterpriseList';
 import logout from '../auth/logOut';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {getUserData} from "../auth/getProfil";
+import axios from "axios";
 
 const Profile = ({ navigation }) => {
-  const [name, setName] = useState('John Doe');
-  const [email, setEmail] = useState('johndoe@example.com');
-  const [phone, setPhone] = useState('123-456-7890');
+
+  // États pour stocker les informations utilisateur
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [editable, setEditable] = useState(false);
 
+  // Fonction pour récupérer les données utilisateur
+  const fetchUserLocalStorage = async () => {
+    try {
+      const user = await getUserData(); // Récupère les données utilisateur de l'AsyncStorage ou LocalStorage
+      if (user) {
+        // Si les données existent, met à jour les états
+        setName(user.name);
+        setEmail(user.email);
+        setPassword(user.password);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la récupération des données utilisateur :', error);
+    }
+  };
+
+  // Utilisez useEffect pour appeler fetchUserLocalStorage au montage du composant
+  useEffect(() => {
+    fetchUserLocalStorage();
+  }, []);
+
   const handleSave = () => {
+    axios.patch(`http://localhost:3000/user/${name}`, { name, email, password })
+        .then(response => {
+          console.log(response.data);
+        })
+        .catch(error => {
+          console.error('Erreur lors de la mise à jour du profil :', error);
+        });
     Alert.alert('Profil modifié', 'Vos informations ont été mises à jour.');
     setEditable(false); // Désactiver l'édition après la sauvegarde
   };
@@ -57,20 +89,20 @@ const Profile = ({ navigation }) => {
           </View>
         )}
 
-        {/* Affichage du téléphone */}
+        {/* Affichage du télépassword */}
         {editable ? (
           <TextInput
             style={styles.input}
-            value={phone}
-            onChangeText={setPhone}
-            placeholder="Téléphone"
-            keyboardType="phone-pad"
+            value={password}
+            onChangeText={setPassword}
+            placeholder="Password"
+            keyboardType="password-pad"
             editable={editable}
           />
         ) : (
           <View style={styles.fieldContainer}>
-            <Text style={styles.fieldLabel}>Téléphone:</Text>
-            <Text style={styles.fieldValue}>{phone}</Text>
+            <Text style={styles.fieldLabel}>Mot de passe:</Text>
+            <Text style={styles.fieldValue}>{password}</Text>
           </View>
         )}
 

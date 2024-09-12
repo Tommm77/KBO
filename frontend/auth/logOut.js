@@ -10,7 +10,7 @@ export const logout = async (navigation) => {
     Alert.alert('Déconnexion', 'Vous avez été déconnecté avec succès.');
 
     // Naviguer vers l'écran de connexion ou d'accueil
-    navigation.navigate('AuthPage'); // Remplacez 'Auth' par le nom de votre écran de connexion
+    navigation.navigate('AuthPage');
 
   } catch (error) {
     console.error('Erreur lors de la déconnexion:', error);

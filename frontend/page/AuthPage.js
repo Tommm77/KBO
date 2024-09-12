@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { data_profils } from '../data/profils'; // Assurez-vous que le chemin est correct
-import { useNavigation } from '@react-navigation/native'; // Pour accéder à la fonction de navigation
+import { useNavigation } from '@react-navigation/native';
+import axios from "axios";
 
 
 const AuthPage = ({ navigation }) => {
@@ -40,24 +40,50 @@ const AuthPage = ({ navigation }) => {
 
     if (isLogin) {
       // Logique de connexion
-      const user = data_profils.find(profile => profile.email === email && profile.password === password);
-      console.log(user)
-      if (user) {
-        // Stocker les informations de l'utilisateur dans AsyncStorage
-        try {
-          await AsyncStorage.setItem('user', JSON.stringify(user));
-          navigation.navigate('Home'); // Connexion réussie
-        } catch (error) {
-          Alert.alert('Erreur', 'Impossible de sauvegarder les informations utilisateur.');
-        }
-      } else {
-        Alert.alert('Erreur', 'Adresse e-mail ou mot de passe incorrect.');
-      }
-    } else {
-      // Logique d'inscription (ici, nous simulerons simplement une inscription réussie)
-      Alert.alert('Inscription', 'Vous êtes maintenant inscrit.');
+      axios.get(`http://localhost:3000/user/${email}`)
+          .then(response => {
+            const user = response.data;
+
+            if (user.email === email && user.password === password) {
+              console.log(user);
+              // Stocker les informations de l'utilisateur dans AsyncStorage
+              AsyncStorage.setItem('user', JSON.stringify(user))
+                  .then(() => {
+                    navigation.navigate('Home'); // Connexion réussie
+                  })
+                  .catch(error => {
+                    Alert.alert('Erreur', 'Impossible de sauvegarder les informations utilisateur.');
+                  });
+            } else {
+              Alert.alert('Erreur', 'Adresse e-mail ou mot de passe incorrect.');
+            }
+          })
+          .catch(error => {
+            console.error("Error fetching user:", error);
+            Alert.alert('Erreur', 'Utilisateur non trouvé.');
+          });
     }
-  };
+    else {
+      try {
+        const name = email.split('@')[0]; // Utiliser le nom d'utilisateur comme nom par défaut
+        // Envoyer la requête POST pour créer un nouvel utilisateur
+        const response = await axios.post('http://localhost:3000/user', { email: email, name: name, password: password });
+
+        // Si la réponse est correcte, enregistrer l'utilisateur dans AsyncStorage
+        await AsyncStorage.setItem('user', JSON.stringify(response.data));
+
+        // Naviguer vers la page d'accueil
+        navigation.navigate('Home');
+
+        // Afficher une alerte d'inscription réussie
+        Alert.alert('Inscription', 'Vous êtes maintenant inscrit.');
+      } catch (error) {
+        // Gérer les erreurs
+        console.error('Erreur:', error);
+        Alert.alert('Erreur', 'Impossible de créer un nouvel utilisateur.');
+      }
+    }
+    };
 
   return (
     <View style={styles.container}>
