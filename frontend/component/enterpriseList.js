@@ -1,38 +1,55 @@
 import React, { useState, useEffect } from 'react';
 import { FlatList, View, Text, ActivityIndicator, StyleSheet } from 'react-native';
-import { data_enterprise } from '../data/enterprise';
-import EnterpriseCard from './EnterpriseCard'
+import axios from "axios";
+import EnterpriseCard from './EnterpriseCard';
 
-
-const EnterpriseList = ({search}) => {
+const EnterpriseList = ({ search }) => {
   const [loading, setLoading] = useState(true);  // Gérer l'état de chargement
   const [enterprises, setEnterprises] = useState([]);  // Gérer les données d'entreprises
+  const [error, setError] = useState(null);  // Gérer les erreurs de chargement
 
   useEffect(() => {
-    // Simuler un fetch (remplacez par un vrai fetch si nécessaire)
-    setTimeout(() => {
-      setEnterprises(data_enterprise);
-      setLoading(false);  // Arrêter le chargement
-    }, 2000);
-  }, []);
+    const fetchEnterprises = async () => {
+      setLoading(true);
+      setError(null);  // Réinitialiser l'erreur
 
-  // Si en cours de chargement, afficher un spinner
+      try {
+        const response = await axios.get(`http://localhost:3000/entreprise/${search.searchType}/${search.searchQuery}`);
+        setEnterprises(response.data);
+        console.log('Résultats trouvés :', response.data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEnterprises();
+  }, [search.searchType, search.searchQuery]);  // Dépendances pour déclencher l'effet
+
   if (loading) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#6200EE" />
-        <Text style={styles.loadingText}>Chargement des entreprises...</Text>
-      </View>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#6200EE" />
+          <Text style={styles.loadingText}>Chargement des entreprises...</Text>
+        </View>
     );
   }
 
-  // Rendu de la liste des entreprises une fois les données chargées
+  if (error) {
+    return (
+        <View style={styles.loadingContainer}>
+          <Text style={styles.loadingText}>Erreur: {error}</Text>
+        </View>
+    );
+  }
+
   return (
-    <FlatList
-      data={enterprises}
-      keyExtractor={item => item.EnterpriseNumber}
-      renderItem={({ item }) => <EnterpriseCard enterprise={item} />}
-    />
+      <FlatList
+          data={enterprises}
+          keyExtractor={item => item.EnterpriseNumber}
+          renderItem={({ item }) => <EnterpriseCard enterprise={item} />}
+      />
   );
 };
 
@@ -51,7 +68,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     marginVertical: 10,
-    backgroundColor: '#f8f9fa', // Couleur de fond claire pour le contraste
+    backgroundColor: '#f8f9fa',
   },
   cardContent: {
     flexDirection: 'column',
@@ -68,6 +85,5 @@ const styles = StyleSheet.create({
     color: '#555',
   },
 });
-
 
 export default EnterpriseList;
