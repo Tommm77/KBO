@@ -18,12 +18,13 @@ const EnterpriseDetail = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.headerContainer}>
-        <Text style={styles.header}>{enterprise.Denomination}</Text>
+        <Text style={styles.header}>{enterprise.Denominations?.[0]?.Denomination || 'Nom non disponible'}</Text>
+        {/* Ajouter la gestion des logos si disponible */}
         {enterprise.Logo && (
           <Image source={{ uri: enterprise.Logo }} style={styles.logo} />
         )}
       </View>
-      
+
       <View style={styles.card}>
         <Text style={styles.subHeader}>Informations Générales</Text>
         <View style={styles.infoContainer}>
@@ -51,10 +52,6 @@ const EnterpriseDetail = () => {
           <Text style={styles.text}>Date de Création: {enterprise.StartDate}</Text>
         </View>
         <View style={styles.infoContainer}>
-          <Icon name="calendar-remove" size={20} color="#555" />
-          <Text style={styles.text}>Date de Radiation: {enterprise.DateStrikingOff}</Text>
-        </View>
-        <View style={styles.infoContainer}>
           <Icon name="map-marker" size={20} color="#555" />
           <Text style={styles.text}>Code Postal: {enterprise.Zipcode}</Text>
         </View>
@@ -66,24 +63,62 @@ const EnterpriseDetail = () => {
           <Icon name="map" size={20} color="#555" />
           <Text style={styles.text}>Rue: {enterprise.StreetFR} {enterprise.HouseNumber}</Text>
         </View>
-        <View style={styles.infoContainer}>
-          <Icon name="map-outline" size={20} color="#555" />
-          <Text style={styles.text}>Complément d'Adresse: {enterprise.ExtraAddressInfo}</Text>
-        </View>
-        <View style={styles.infoContainer}>
-          <Icon name="map-marker-outline" size={20} color="#555" />
-          <Text style={styles.text}>Boîte: {enterprise.Box}</Text>
-        </View>
-        <View style={styles.infoContainer}>
-          <Icon name="earth" size={20} color="#555" />
-          <Text style={styles.text}>Pays (FR): {enterprise.CountryFR}</Text>
-        </View>
-        <View style={styles.infoContainer}>
-          <Icon name="earth" size={20} color="#555" />
-          <Text style={styles.text}>Pays (NL): {enterprise.CountryNL}</Text>
-        </View>
+        {/* Ajout des informations d'adresse supplémentaire si disponibles */}
+        {enterprise.ExtraAddressInfo && (
+          <View style={styles.infoContainer}>
+            <Icon name="information-outline" size={20} color="#555" />
+            <Text style={styles.text}>Adresse Complémentaire: {enterprise.ExtraAddressInfo}</Text>
+          </View>
+        )}
+        {/* Ajout des informations de boîte si disponibles */}
+        {enterprise.Box && (
+          <View style={styles.infoContainer}>
+            <Icon name="postage-stamp" size={20} color="#555" />
+            <Text style={styles.text}>Boîte: {enterprise.Box}</Text>
+          </View>
+        )}
       </View>
 
+      {/* Affichage des établissements si disponibles */}
+      {enterprise.Establishment && enterprise.Establishment.length > 0 && (
+        <View style={styles.card}>
+          <Text style={styles.subHeader}>Établissements</Text>
+          {enterprise.Establishment.map((establishment, index) => (
+            <View key={index} style={styles.activityContainer}>
+              <Text style={styles.text}>Numéro d'Établissement: {establishment.EstablishmentNumber}</Text>
+              <Text style={styles.text}>Date de Création: {establishment.StartDate}</Text>
+              {/* Afficher les informations de chaque activité d'établissement */}
+              {establishment.Activity && establishment.Activity.length > 0 && (
+                <View>
+                  <Text style={styles.subHeader}>Activités</Text>
+                  {establishment.Activity.map((activity, index) => (
+                    <View key={index} style={styles.activityContainer}>
+                      <Text style={styles.text}>Groupe d'Activité: {activity.ActivityGroup}</Text>
+                      <Text style={styles.text}>Code NACE: {activity.NaceCode}</Text>
+                      <Text style={styles.text}>Version NACE: {activity.NaceVersion}</Text>
+                      <Text style={styles.text}>Classification: {activity.Classification}</Text>
+                    </View>
+                  ))}
+                </View>
+              )}
+              {/* Afficher les contacts s'ils existent */}
+              {establishment.Contact && establishment.Contact.length > 0 && (
+                <View>
+                  <Text style={styles.subHeader}>Contacts</Text>
+                  {establishment.Contact.map((contact, index) => (
+                    <View key={index} style={styles.activityContainer}>
+                      <Text style={styles.text}>Nom: {contact.ContactName}</Text>
+                      <Text style={styles.text}>Email: {contact.ContactEmail}</Text>
+                    </View>
+                  ))}
+                </View>
+              )}
+            </View>
+          ))}
+        </View>
+      )}
+
+      {/* Affichage des activités générales si disponibles */}
       {enterprise.Activity && enterprise.Activity.length > 0 && (
         <View style={styles.card}>
           <Text style={styles.subHeader}>Activités</Text>
@@ -93,41 +128,6 @@ const EnterpriseDetail = () => {
               <Text style={styles.text}>Code NACE: {activity.NaceCode}</Text>
               <Text style={styles.text}>Version NACE: {activity.NaceVersion}</Text>
               <Text style={styles.text}>Classification: {activity.Classification}</Text>
-            </View>
-          ))}
-        </View>
-      )}
-
-      {enterprise.Contact && enterprise.Contact.length > 0 && (
-        <View style={styles.card}>
-          <Text style={styles.subHeader}>Contacts</Text>
-          {enterprise.Contact.map((contact, index) => (
-            <View key={index} style={styles.infoContainer}>
-              <Icon name="account-multiple" size={20} color="#555" />
-              <Text style={styles.text}>Nom: {contact.ContactName}</Text>
-              <Text style={styles.text}>Email: {contact.ContactEmail}</Text>
-            </View>
-          ))}
-        </View>
-      )}
-
-      {enterprise.Branch && enterprise.Branch.length > 0 && (
-        <View style={styles.card}>
-          <Text style={styles.subHeader}>Branches</Text>
-          {enterprise.Branch.map((branch, index) => (
-            <View key={index} style={styles.infoContainer}>
-              <Text style={styles.text}>Nom de la Branche: {branch.BranchName}</Text>
-            </View>
-          ))}
-        </View>
-      )}
-      
-      {enterprise.Establishment && enterprise.Establishment.length > 0 && (
-        <View style={styles.card}>
-          <Text style={styles.subHeader}>Établissements</Text>
-          {enterprise.Establishment.map((establishment, index) => (
-            <View key={index} style={styles.infoContainer}>
-              <Text style={styles.text}>Nom de l'Établissement: {establishment.EstablishmentName}</Text>
             </View>
           ))}
         </View>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FlatList, View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import axios from "axios";
 import EnterpriseCard from './EnterpriseCard';
+import { data_enterprise } from '../data/enterprise';
 
 const EnterpriseList = ({ search }) => {
   const [loading, setLoading] = useState(true);  // Gérer l'état de chargement
@@ -9,6 +10,7 @@ const EnterpriseList = ({ search }) => {
   const [error, setError] = useState(null);  // Gérer les erreurs de chargement
 
   useEffect(() => {
+    /*
     const fetchEnterprises = async () => {
       setLoading(true);
       setError(null);  // Réinitialiser l'erreur
@@ -22,10 +24,15 @@ const EnterpriseList = ({ search }) => {
       } finally {
         setLoading(false);
       }
+        
     };
-
     fetchEnterprises();
-  }, [search.searchType, search.searchQuery]);  // Dépendances pour déclencher l'effet
+    */
+    setTimeout(() => {
+      setEnterprises(data_enterprise);
+      setLoading(false);  // Arrêter le chargement
+    }, 2000);
+  }, []);  // Dépendances pour déclencher l'effet
 
   if (loading) {
     return (

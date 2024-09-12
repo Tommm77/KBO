@@ -13,9 +13,9 @@ const EnterpriseCard = ({ enterprise }) => {
 
   return (
     <TouchableOpacity onPress={handlePress} style={styles.card}>
-      <Text style={styles.title}>{enterprise.Denomination}</Text>
+      <Text style={styles.title}>{enterprise.Denominations?.[0]?.Denomination}</Text>
       <Text style={styles.subtitle}>Numéro: {enterprise.EnterpriseNumber}</Text>
-      <Text style={styles.subtitle}>Activité: {enterprise.Activity.map(activity => activity.NaceCode).join(', ')}</Text>
+      <Text style={styles.subtitle}>Activité: {enterprise.Activity[0].NaceCode}</Text>
       {/* Ajoutez d'autres détails de l'entreprise ici */}
     </TouchableOpacity>
   );
