@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity, StyleSheet, Text, Platform } from 'react-native';
+import { View, TextInput, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { Icon } from '@rneui/themed';
 import { Dropdown } from 'react-native-element-dropdown';
 import { data_activity } from '../data/enterprise';
@@ -38,9 +38,8 @@ const SearchBar = ({ onSearch }) => {
     const searchParams = {
       searchQuery,
       searchType: detectedType,
-      selectedActivity: selectedOption === 'activité' ? selectedActivity : null,
-      selectedAddress: selectedOption === 'adresse' ? selectedAddress : null,
     };
+    console.log(searchParams)
     onSearch(searchParams);
   };
 
