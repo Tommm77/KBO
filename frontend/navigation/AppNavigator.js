@@ -13,7 +13,7 @@ const AppNavigator = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="AuthPage"
+        initialRouteName="Home"
         screenOptions={{
           headerShown: true,
           headerStyle: { backgroundColor: '#6200EE' },
