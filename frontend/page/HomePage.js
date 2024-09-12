@@ -4,8 +4,6 @@ import SearchBar from '../component/SearchBar';
 import { Icon } from '@rneui/themed';
 import EnterpriseList from '../component/enterpriseList';
 
-const screenWidth = Dimensions.get('window').width;
-
 const HomePage = ({ navigation }) => {
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -24,6 +22,7 @@ const HomePage = ({ navigation }) => {
           <SearchBar onSearch={handleSearch} />
         </View>
       </ScrollView>
+      
 
       {searchTerm ? (
           <EnterpriseList search={searchTerm} />
@@ -52,7 +51,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 30,
-    marginTop: 150
+    marginTop: 120
   },
   title: {
     fontSize: 24,
