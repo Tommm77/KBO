@@ -39,28 +39,32 @@ const SearchBar = ({ onSearch }) => {
   };
 
   const handleSearch = () => {
+    let searchParams = {}; // Déclare searchParams en dehors des blocs if
+  
     if (selectedOption === 'name/id') {
       const detectedType = detectSearchType(searchQuery);
-      const searchParams = {
-      searchQuery,
-      searchType: detectedType,
+      searchParams = {
+        searchQuery,
+        searchType: detectedType,
       };
-    }else if (selectedOption === 'activité') {
-      const searchParams = {
-      searchQuery,
-      searchType: 'activité',
-      Option: selectedActivity
+    } else if (selectedOption === 'activité') {
+      searchParams = {
+        searchQuery,
+        searchType: 'activité',
+        Option: selectedActivity,
       };
-    }else if (selectedOption === 'adresse') {
-      const searchParams = {
-      searchQuery,
-      searchType: 'adresse',
-      Option: selectedAddress
+    } else if (selectedOption === 'adresse') {
+      searchParams = {
+        searchQuery,
+        searchType: 'adresse',
+        Option: selectedAddress,
       };
-    };
-    console.log(searchParams)
+    }
+  
+    console.log(searchParams);
     onSearch(searchParams);
   };
+  
 
   return (
     <View style={styles.container}>
