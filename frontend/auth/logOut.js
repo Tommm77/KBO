@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
 
-const logout = async (navigation) => {
+export const logout = async (navigation) => {
   try {
     // Supprimer les données de l'utilisateur
     await AsyncStorage.removeItem('user');
@@ -18,4 +18,13 @@ const logout = async (navigation) => {
   }
 };
 
-export default logout;
+export const UpdateStorage = async (user) => {
+  try {
+    // Mettre à jour les données de l'utilisateur
+    await AsyncStorage.setItem('user', JSON.stringify(user));
+    Alert.alert('Succès', 'Les données utilisateur ont été mises à jour.');
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour des données utilisateur:', error);
+    Alert.alert('Erreur', 'Une erreur est survenue lors de la mise à jour des données utilisateur.');
+  }
+};
