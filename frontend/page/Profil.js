@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert, FlatList } from 'react-native';
 import EnterpriseList from '../component/enterpriseList';
-import logout from '../auth/logOut';
+import {logout} from '../auth/logOut';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {getUserData} from "../auth/getProfil";
 import axios from "axios";
