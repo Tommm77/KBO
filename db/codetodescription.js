@@ -35,7 +35,41 @@ function replaceCodes(obj, langFr) {
         }
     }
 
+    function replaceNaceCode(activity, langFr) {
+        if (activity.NaceVersion && langFr[`Nace${activity.NaceVersion}`]) {
+            const naceTranslations = langFr[`Nace${activity.NaceVersion}`];
+            if (activity.NaceCode && naceTranslations[activity.NaceCode]) {
+                activity.NaceCode = naceTranslations[activity.NaceCode];
+            }
+        }
+    }
+
+    function processActivityArray(array, langFr) {
+        array.forEach(activity => {
+            replaceNaceCode(activity, langFr);
+            traverseAndReplace(activity);
+        });
+    }
+
+    function processEstablishmentArray(array, langFr) {
+        array.forEach(establishment => {
+            if (Array.isArray(establishment.Activity)) {
+                processActivityArray(establishment.Activity, langFr);
+            }
+            traverseAndReplace(establishment);
+        });
+    }
+
+    if (Array.isArray(obj.Activity)) {
+        processActivityArray(obj.Activity, langFr);
+    }
+
+    if (Array.isArray(obj.Establishment)) {
+        processEstablishmentArray(obj.Establishment, langFr);
+    }
+
     traverseAndReplace(obj);
+
     return obj;
 }
 
