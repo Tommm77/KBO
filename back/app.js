@@ -3,6 +3,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
 const PORT = 3000;
+const cors = require('cors'); // Importation du module CORS
+
+app.use(cors());
 
 mongoose.connect('mongodb://localhost:27017/kbo_final_db');
 
@@ -46,7 +49,7 @@ app.get('/entreprise/name/:name', async (req, res) => {
         if (!entreprises.length) {
             return res.status(404).json({ message: 'Entreprise not found' });
         }
-
+        console.log('data send');
         res.json(entreprises);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching entreprise', error });
