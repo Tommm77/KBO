@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity, StyleSheet, Text, Platform } from 'react-native';
+import { View, TextInput, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { Icon } from '@rneui/themed';
 import { Dropdown } from 'react-native-element-dropdown';
 import { data_activity } from '../data/enterprise';
@@ -39,6 +39,7 @@ const SearchBar = ({ onSearch }) => {
       searchQuery,
       searchType: detectedType,
     };
+    console.log(searchParams)
     onSearch(searchParams);
   };
 

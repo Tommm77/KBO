@@ -7,6 +7,7 @@ const EnterpriseCard = ({ enterprise }) => {
 
   const handlePress = () => {
     // Naviguer vers la page de détails avec l'objet entreprise passé en paramètre
+    //console.log(enterprise)
     navigation.navigate('Détail', { enterprise });
   };
 
