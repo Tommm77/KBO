@@ -6,23 +6,29 @@ import { data_enterprise } from '../data/enterprise';
 
 const EnterpriseList = ({ search }) => {
   const [loading, setLoading] = useState(true);  // Gérer l'état de chargement
-  const [enterprises, setEnterprises] = useState([]);  // Gérer les données d'entreprises
+  const [enterprises, setEnterprises] = useState();  // Gérer les données d'entreprises
   const [error, setError] = useState(null);  // Gérer les erreurs de chargement
 
   useEffect(() => {
     const fetchEnterprises = async () => {
       setLoading(true);
       setError(null);  // Réinitialiser l'erreur
-      url = `http://localhost:3000/entreprise/${search.searchType}/${search.searchQuery}`;
-
-      if (search.searchType === 'activité') {
-        url = `http://localhost:3000/entreprise/name/uber`; //temporaire
-      }
-
       try {
-        const response = await axios.get(url);
-        setEnterprises(response.data);
-        console.log('Résultats trouvés :', response.data);
+        if (search.searchType === 'activité') {
+          console.log('activity request: ', search.searchType, search.searchQuery)
+          const response = await axios.get('http://localhost:3000/entreprise/activity/', {
+            params: {
+              ActivityGroup: search.searchQuery,
+              NaceCode: search.searchType,
+            },
+          });
+          setEnterprises(response.data);
+          console.log('Résultats trouvés :', response.data);
+        }else {
+          const response = await axios.get(`http://localhost:3000/entreprise/${search.searchType}/${search.searchQuery}`);
+          setEnterprises(response.data);
+          console.log('Résultats trouvés :', response.data);
+        }
       } catch (err) {
         setError(err.message);
       } finally {
