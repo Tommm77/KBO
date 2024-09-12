@@ -13,9 +13,14 @@ const EnterpriseList = ({ search }) => {
     const fetchEnterprises = async () => {
       setLoading(true);
       setError(null);  // Réinitialiser l'erreur
+      url = `http://localhost:3000/entreprise/${search.searchType}/${search.searchQuery}`;
+
+      if (search.searchType === 'activité') {
+        url = `http://localhost:3000/entreprise/name/uber`; //temporaire
+      }
 
       try {
-        const response = await axios.get(`http://localhost:3000/entreprise/${search.searchType}/${search.searchQuery}`);
+        const response = await axios.get(url);
         setEnterprises(response.data);
         console.log('Résultats trouvés :', response.data);
       } catch (err) {
