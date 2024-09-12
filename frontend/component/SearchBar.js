@@ -13,19 +13,15 @@ const RadioButton = ({ selected }) => {
 
 const SearchBar = ({ onSearch }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedOption, setSelectedOption] = useState('name/id'); // Initialiser avec 'name/id'
+  const [selectedOption, setSelectedOption] = useState('name/id');
   const [selectedActivity, setSelectedActivity] = useState('');
   const [selectedAddress, setSelectedAddress] = useState('');
-
-  const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
 
-  // Fonction pour gérer les changements dans la barre de recherche
   const handleChange = (query) => {
     setSearchQuery(query);
   };
 
-  // Fonction pour détecter automatiquement le type de recherche
   const detectSearchType = (query) => {
     if (selectedOption === 'name/id') {
       const isEnterpriseNumber = /^\d{4}\.\d{3}\.\d{3}$/.test(query);
@@ -37,7 +33,6 @@ const SearchBar = ({ onSearch }) => {
     return selectedOption;
   };
 
-  // Fonction pour lancer la recherche
   const handleSearch = () => {
     const detectedType = detectSearchType(searchQuery);
     const searchParams = {
@@ -72,19 +67,19 @@ const SearchBar = ({ onSearch }) => {
               maxHeight={300}
               labelField="label"
               valueField="value"
-              placeholder="ACtivity"
+              placeholder="Activité"
               searchPlaceholder="Search..."
-              value={value}
+              value={selectedActivity}
               onFocus={() => setIsFocus(true)}
               onBlur={() => setIsFocus(false)}
               onChange={item => {
-                setValue(item.value);
+                setSelectedActivity(item.value);
                 setIsFocus(false);
               }}
             />
             <TextInput
               style={styles.searchInput}
-              placeholder="Rechercher par adresse"
+              placeholder="Détail de l'activité"
               value={searchQuery}
               onChangeText={handleChange}
             />
@@ -102,19 +97,19 @@ const SearchBar = ({ onSearch }) => {
               maxHeight={300}
               labelField="label"
               valueField="value"
-              placeholder="ACtivity"
+              placeholder="Adresse"
               searchPlaceholder="Search..."
-              value={value}
+              value={selectedAddress}
               onFocus={() => setIsFocus(true)}
               onBlur={() => setIsFocus(false)}
               onChange={item => {
-                setValue(item.value);
+                setSelectedAddress(item.value);
                 setIsFocus(false);
               }}
             />
             <TextInput
               style={styles.searchInput}
-              placeholder="Rechercher par adresse"
+              placeholder="Détail de l'adresse"
               value={searchQuery}
               onChangeText={handleChange}
             />
@@ -158,6 +153,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginVertical: 10,
   },
   input: {
     flex: 1,
@@ -168,10 +164,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     backgroundColor: '#fff',
     fontSize: 14,
-    marginHorizontal: 5,
+    marginRight: 10,
   },
   searchInput: {
-    flex: 1,
+    width: 150,
     height: 45,
     borderColor: '#ccc',
     borderWidth: 1,
@@ -179,7 +175,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     backgroundColor: '#fff',
     fontSize: 14,
-    marginHorizontal: 5,
+    marginLeft: 10,
   },
   button: {
     backgroundColor: '#6200EE',
@@ -225,12 +221,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#6200EE',
   },
   dropdown: {
-    height: 50,
+    height: 45,
     width: 120,
     borderColor: 'gray',
     borderWidth: 0.5,
-    borderRadius: 8,
+    borderRadius: 25, // Coins arrondis
     paddingHorizontal: 8,
+    marginRight: 10, // Espacement entre le picker et la barre de recherche
+    backgroundColor: '#fff',
   },
   placeholderStyle: {
     fontSize: 16,
