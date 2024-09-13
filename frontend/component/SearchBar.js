@@ -73,17 +73,12 @@ const SearchBar = ({ onSearch }) => {
     <View style={styles.container}>
       <View style={styles.containerBar}>
         {selectedOption === 'name/id' ? (
-            <View style={styles.row}>
               <TextInput
                 style={styles.input}
                 placeholder="Rechercher une entreprise par nom ou ID"
                 value={searchQuery}
                 onChangeText={handleChange}
               />
-              <TouchableOpacity style={styles.button} onPress={handleSearch}>
-                <Icon name="search" color="white" />
-              </TouchableOpacity>
-        </View>
         ) : selectedOption === 'activité' ? (
           <View style={styles.row}>
             <Dropdown
