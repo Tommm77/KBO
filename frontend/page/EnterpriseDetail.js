@@ -11,39 +11,51 @@ const EnterpriseDetail = () => {
 
   const enterprise_idfit = enterprise.EnterpriseNumber.replace(/\./g, '');
 
+
   useEffect(() => {
     // Vérifier si l'entreprise est déjà marquée comme favorite
     const checkIfFavorite = async () => {
       try {
-        const storedFavorites = await AsyncStorage.getItem('favorites'); // Récupérer les favoris
-        const favorites = storedFavorites ? JSON.parse(storedFavorites) : [];
-        const isFavorite = favorites.some(fav => fav.EnterpriseNumber === enterprise.EnterpriseNumber);
-        setIsFavorite(isFavorite);
+        const storedData = await AsyncStorage.getItem('user'); // Récupérer les données utilisateur
+        const user = storedData ? JSON.parse(storedData) : null;
+
+        if (user && user.favorite) {
+          // Vérifier si l'entreprise est dans la liste des favoris
+          const isFavorite = user.favorite.some(fav => fav.EnterpriseNumber === enterprise.EnterpriseNumber);
+          setIsFavorite(isFavorite);
+        } else {
+          setIsFavorite(false);
+        }
       } catch (error) {
         console.error('Erreur lors de la récupération des favoris:', error);
       }
     };
-
     checkIfFavorite();
   }, [enterprise]);
 
   // Fonction pour basculer l'état favori
   const toggleFavorite = async () => {
     try {
-      const storedFavorites = await AsyncStorage.getItem('favorites');
-      const favorites = storedFavorites ? JSON.parse(storedFavorites) : [];
+      const storedData = await AsyncStorage.getItem('user');
+      const user = storedData ? JSON.parse(storedData) : null;
 
-      if (isFavorite) {
-        // Si l'entreprise est déjà favorite, on la retire des favoris
-        const updatedFavorites = favorites.filter(fav => fav.EnterpriseNumber !== enterprise.EnterpriseNumber);
-        await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites));
-      } else {
-        // Sinon, on l'ajoute aux favoris
-        const updatedFavorites = [...favorites, enterprise];
-        await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+      if (user) {
+        let updatedFavorites;
+
+        if (isFavorite) {
+          // Si l'entreprise est déjà favorite, on la retire des favoris
+          updatedFavorites = user.favorite.filter(fav => fav.EnterpriseNumber !== enterprise.EnterpriseNumber);
+        } else {
+          // Sinon, on l'ajoute aux favoris
+          updatedFavorites = [...user.favorite, { EnterpriseNumber: enterprise.EnterpriseNumber }];
+        }
+
+        // Mettre à jour l'objet utilisateur avec la liste modifiée des favoris
+        const updatedUser = { ...user, favorite: updatedFavorites };
+        await AsyncStorage.setItem('user', JSON.stringify(updatedUser));
+
+        setIsFavorite(!isFavorite); // Met à jour l'état local
       }
-
-      setIsFavorite(!isFavorite); // Met à jour l'état local
     } catch (error) {
       console.error('Erreur lors de la mise à jour des favoris:', error);
     }
