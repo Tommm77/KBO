@@ -60,9 +60,8 @@ app.get('/entreprise/activity/', async (req, res) => {
     const activityGroup = req.query.ActivityGroup;
     let naceCode = req.query.NaceCode;
 
-    // Vérification si le naceCode a au moins 3 caractères
     if (naceCode.length >= 3) {
-        naceCode = new RegExp(`^${naceCode}`, 'i'); // Recherche par expression régulière
+        naceCode = new RegExp(`^${naceCode}`, 'i');
     } else {
         return res.status(400).json({ message: 'Le NaceCode doit contenir au moins 3 caractères.' });
     }
