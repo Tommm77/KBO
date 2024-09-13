@@ -5,7 +5,7 @@ const dbName = 'kbo_final_db';
 
 async function importJSON() {
 
-    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    const client = new MongoClient(uri);
     try {
         console.log('Connexion à MongoDB...');
         await client.connect();

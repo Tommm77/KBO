@@ -10,25 +10,40 @@ const EnterpriseList = ({ search }) => {
   const [error, setError] = useState(null);  // Gérer les erreurs de chargement
 
   useEffect(() => {
-    /*
     const fetchEnterprises = async () => {
       setLoading(true);
       setError(null);  // Réinitialiser l'erreur
       try {
-        if (search.searchType === 'activité') {
+        if (search.searchOption === 'activité') {
           console.log('activity request: ', search.searchType, search.searchQuery)
           const response = await axios.get('http://localhost:3000/entreprise/activity/', {
             params: {
-              ActivityGroup: search.searchQuery,
-              NaceCode: search.searchType,
+              NaceCode: search.searchQuery,
+              ActivityGroup: search.searchType,
             },
           });
           setEnterprises(response.data);
           console.log('Résultats trouvés :', response.data);
         }else {
           const response = await axios.get(`http://localhost:3000/entreprise/${search.searchType}/${search.searchQuery}`);
-          setEnterprises(response.data);
-          console.log('Résultats trouvés :', response.data);
+          console.log(`http://localhost:3000/entreprise/${search.searchType}/${search.searchQuery}`);
+
+          if (Array.isArray(response.data)) {
+            console.log(response.data.length);
+
+            if (response.data.length === 1) {
+              setEnterprises([response.data[0]]);
+              console.log('Résultats trouvés :', response.data[0]);
+            } else if (response.data.length > 1) {
+              setEnterprises(response.data);
+            } else {
+              alert('Aucune entreprise trouvée');
+            }
+          } else {
+            setEnterprises([response.data]);
+            console.log('Résultats trouvés :', response.data);
+          }
+
         }
       } catch (err) {
         setError(err.message);
@@ -38,11 +53,6 @@ const EnterpriseList = ({ search }) => {
         
     };
     fetchEnterprises();
-    */
-    setTimeout(() => {
-      setEnterprises(data_enterprise);
-      setLoading(false);  // Arrêter le chargement
-    }, 2000);
   }, [search.searchQuery, search.searchType]);  // Dépendances pour déclencher l'effet
 
   if (loading) {
