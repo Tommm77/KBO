@@ -153,7 +153,7 @@ const Profile = ({ navigation }) => {
         <Text style={styles.sectionTitle}>Entreprises mises en favoris</Text>
         <View style={styles.favList}>
           {/* Liste des entreprises en favoris */}
-          <EnterpriseList search={""} />
+          <EnterpriseList search={{searchOption: "fav"}} />
         </View>
       </View>
     </View>
