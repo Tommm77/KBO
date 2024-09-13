@@ -25,18 +25,35 @@ const EnterpriseList = ({ search }) => {
           setEnterprises(response.data);
           console.log('Résultats trouvés :', response.data);
         } else if (search.searchOption === 'fav') {
-          const favoriteEnterprises = user.favorite.map(fav => fav.EnterpriseNumber); // Récupérer les EnterpriseNumbers
-          console.log('Entreprises favorites trouvées :', favoriteEnterprises);
+          // Récupérer l'utilisateur du localStorage
+          const user = JSON.parse(localStorage.getItem('user'));
 
-          // Appel à l'API pour chaque entreprise favorite si nécessaire
-          const responses = await Promise.all(favoriteEnterprises.map(async (EnterpriseNumber) => {
-            return axios.get(`http://localhost:3000/entreprise/id/${EnterpriseNumber}`);
-          }));
+          if (user && user.favorite) {
+              // Récupérer les EnterpriseNumbers (en évitant les doublons)
+              const favoriteEnterprises = user.favorite.map(fav => fav.EnterpriseNumber);
+              console.log('Entreprises favorites trouvées :', favoriteEnterprises);
 
-          // Stocker toutes les réponses des entreprises
-          const enterprisesData = responses.map(response => response.data);
-          setEnterprises(enterprisesData);
-          console.log('Données des entreprises récupérées :', enterprisesData);
+              // Appel à l'API pour chaque entreprise favorite si nécessaire
+              const fetchFavoriteEnterprises = async () => {
+                  try {
+                      const responses = await Promise.all(favoriteEnterprises.map(async (EnterpriseNumber) => {
+                          return axios.get(`http://localhost:3000/entreprise/id/${EnterpriseNumber}`);
+                      }));
+
+                      // Stocker toutes les réponses des entreprises
+                      const enterprisesData = responses.map(response => response.data);
+                      setEnterprises(enterprisesData);
+                      console.log('Données des entreprises récupérées :', enterprisesData);
+                  } catch (error) {
+                      console.error('Erreur lors de la récupération des entreprises favorites:', error);
+                  }
+              };
+
+              // Exécuter la fonction pour récupérer les données des entreprises
+              fetchFavoriteEnterprises();
+          } else {
+              console.log('Aucun utilisateur ou entreprises favorites trouvées.');
+          }
         }else {
           const response = await axios.get(`http://localhost:3000/entreprise/${search.searchType}/${search.searchQuery}`);
           console.log(`http://localhost:3000/entreprise/${search.searchType}/${search.searchQuery}`);
