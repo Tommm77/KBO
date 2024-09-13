@@ -5,7 +5,31 @@ const app = express();
 const PORT = 3000;
 const cors = require('cors'); // Importation du module CORS
 
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+
 app.use(cors());
+
+// Configuration Swagger
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'API Entreprises',
+            version: '1.0.0',
+            description: 'API pour gérer les entreprises et les utilisateurs',
+        },
+        servers: [
+            {
+                url: `http://localhost:${PORT}`,
+            },
+        ],
+    },
+    apis: ['./app.js'], // Path to the API docs (this file)
+};
+
+const swaggerDocs = swaggerJsdoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 mongoose.connect('mongodb://localhost:27017/kbo_final_db');
 
@@ -19,6 +43,24 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 
+/**
+ * @swagger
+ * /entreprise/id/{id}:
+ *   get:
+ *     summary: Récupérer une entreprise par son numéro d'entreprise
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Numéro d'entreprise
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Entreprise trouvée
+ *       404:
+ *         description: Entreprise non trouvée
+ */
 app.get('/entreprise/id/:id', async (req, res) => {
     const EnterpriseNumber = req.params.id;
     console.log(`Fetching entreprise with EnterpriseNumber: ${EnterpriseNumber}`);
@@ -33,6 +75,24 @@ app.get('/entreprise/id/:id', async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /entreprise/name/{name}:
+ *   get:
+ *     summary: Récupérer une entreprise par le début de son nom
+ *     parameters:
+ *       - in: path
+ *         name: name
+ *         required: true
+ *         description: Début de la dénomination de l'entreprise
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Liste des entreprises trouvées
+ *       404:
+ *         description: Entreprise non trouvée
+ */
 app.get('/entreprise/name/:name', async (req, res) => {
     const name = req.params.name;
     console.log(`Fetching entreprise with Denomination starting with: ${name}`);
@@ -56,6 +116,30 @@ app.get('/entreprise/name/:name', async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /entreprise/activity:
+ *   get:
+ *     summary: Récupérer des entreprises par activité et NaceCode
+ *     parameters:
+ *       - in: query
+ *         name: ActivityGroup
+ *         required: true
+ *         description: Groupe d'activité de l'entreprise
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: NaceCode
+ *         required: true
+ *         description: Code NACE de l'activité
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Liste des entreprises trouvées
+ *       404:
+ *         description: Entreprise non trouvée
+ */
 app.get('/entreprise/activity/', async (req, res) => {
     const activityGroup = req.query.ActivityGroup;
     let naceCode = req.query.NaceCode;
@@ -92,7 +176,24 @@ app.get('/entreprise/activity/', async (req, res) => {
     }
 });
 
-
+/**
+ * @swagger
+ * /entreprise/zipcode/{zipcode}:
+ *   get:
+ *     summary: Récupérer une entreprise par code postal
+ *     parameters:
+ *       - in: path
+ *         name: zipcode
+ *         required: true
+ *         description: Code postal de l'entreprise
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Liste des entreprises trouvées
+ *       404:
+ *         description: Entreprise non trouvée
+ */
 app.get('/entreprise/zipcode/:zipcode', async (req, res) => {
     const zipcode = req.params.zipcode;
     console.log(`Fetching entreprise with ZipCode: ${zipcode}`);
@@ -111,6 +212,24 @@ app.get('/entreprise/zipcode/:zipcode', async (req, res) => {
 
 });
 
+/**
+ * @swagger
+ * /entreprise/city/{city}:
+ *   get:
+ *     summary: Récupérer une entreprise par ville
+ *     parameters:
+ *       - in: path
+ *         name: city
+ *         required: true
+ *         description: Nom de la ville (MunicipalityFR)
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Liste des entreprises trouvées
+ *       404:
+ *         description: Entreprise non trouvée
+ */
 app.get('/entreprise/city/:city', async (req, res) => {
     const MunicipalityFR = req.params.city;
     console.log(`Fetching entreprise with MunicipalityFR: ${MunicipalityFR}`);
@@ -128,6 +247,24 @@ app.get('/entreprise/city/:city', async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /user/{email}:
+ *   get:
+ *     summary: Récupérer un utilisateur par email
+ *     parameters:
+ *       - in: path
+ *         name: email
+ *         required: true
+ *         description: Adresse e-mail de l'utilisateur
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Utilisateur trouvé
+ *       404:
+ *         description: Utilisateur non trouvé
+ */
 app.get('/user/:email', async (req, res) => {
 
     const email = req.params.email;
@@ -144,6 +281,30 @@ app.get('/user/:email', async (req, res) => {
 
 app.use(express.json());
 
+/**
+ * @swagger
+ * /user:
+ *   post:
+ *     summary: Créer un nouvel utilisateur
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               age:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Utilisateur créé avec succès
+ *       500:
+ *         description: Erreur lors de la création de l'utilisateur
+ */
 app.post('/user', async (req, res) => {
     const user = req.body;
     console.log('Creating user:', req.body);
@@ -155,6 +316,35 @@ app.post('/user', async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /user/{name}:
+ *   patch:
+ *     summary: Mettre à jour un utilisateur par nom
+ *     parameters:
+ *       - in: path
+ *         name: name
+ *         required: true
+ *         description: Nom de l'utilisateur
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               age:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Utilisateur mis à jour avec succès
+ *       500:
+ *         description: Erreur lors de la mise à jour de l'utilisateur
+ */
 app.patch('/user/:name', async (req, res) => {
     const name = req.params.name;
     const user = req.body;
