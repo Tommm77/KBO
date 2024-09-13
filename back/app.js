@@ -58,15 +58,23 @@ app.get('/entreprise/name/:name', async (req, res) => {
 
 app.get('/entreprise/activity/', async (req, res) => {
     const activityGroup = req.query.ActivityGroup;
-    const naceCode = req.query.NaceCode;
+    let naceCode = req.query.NaceCode;
 
+    // Vérification si le naceCode a au moins 3 caractères
+    if (naceCode.length >= 3) {
+        naceCode = new RegExp(`^${naceCode}`, 'i'); // Recherche par expression régulière
+    } else {
+        return res.status(400).json({ message: 'Le NaceCode doit contenir au moins 3 caractères.' });
+    }
+
+    console.log(`Fetching entreprise with ActivityGroup: ${activityGroup} and NaceCode: ${naceCode}`);
 
     try {
         const entreprises = await db.collection('entreprise').find({
             "Activity": {
                 "$elemMatch": {
-                    "ActivityGroup": activityGroup,
-                    "NaceCode": naceCode
+                    "NaceCode": naceCode,
+                    "ActivityGroup": activityGroup
                 }
             }
         }).toArray();
@@ -83,6 +91,7 @@ app.get('/entreprise/activity/', async (req, res) => {
         res.status(500).json({ message: 'Error fetching entreprise', error });
     }
 });
+
 
 app.get('/entreprise/zipcode/:zipcode', async (req, res) => {
     const zipcode = req.params.zipcode;

@@ -54,6 +54,7 @@ const SearchBar = ({ onSearch }) => {
       searchParams = {
         searchQuery,
         searchType: selectedActivity,
+        searchOption: 'activité',
       };
     } else if (selectedOption === 'adresse') {
       if (selectedAddress === ''){

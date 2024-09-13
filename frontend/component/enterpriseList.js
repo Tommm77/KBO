@@ -14,12 +14,12 @@ const EnterpriseList = ({ search }) => {
       setLoading(true);
       setError(null);  // Réinitialiser l'erreur
       try {
-        if (search.searchType === 'activité') {
+        if (search.searchOption === 'activité') {
           console.log('activity request: ', search.searchType, search.searchQuery)
           const response = await axios.get('http://localhost:3000/entreprise/activity/', {
             params: {
-              ActivityGroup: search.searchQuery,
-              NaceCode: search.searchType,
+              NaceCode: search.searchQuery,
+              ActivityGroup: search.searchType,
             },
           });
           setEnterprises(response.data);
