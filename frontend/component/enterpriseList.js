@@ -24,6 +24,19 @@ const EnterpriseList = ({ search }) => {
           });
           setEnterprises(response.data);
           console.log('Résultats trouvés :', response.data);
+        } else if (search.searchOption === 'fav') {
+          const favoriteEnterprises = user.favorite.map(fav => fav.EnterpriseNumber); // Récupérer les EnterpriseNumbers
+          console.log('Entreprises favorites trouvées :', favoriteEnterprises);
+
+          // Appel à l'API pour chaque entreprise favorite si nécessaire
+          const responses = await Promise.all(favoriteEnterprises.map(async (EnterpriseNumber) => {
+            return axios.get(`http://localhost:3000/entreprise/id/${EnterpriseNumber}`);
+          }));
+
+          // Stocker toutes les réponses des entreprises
+          const enterprisesData = responses.map(response => response.data);
+          setEnterprises(enterprisesData);
+          console.log('Données des entreprises récupérées :', enterprisesData);
         }else {
           const response = await axios.get(`http://localhost:3000/entreprise/${search.searchType}/${search.searchQuery}`);
           console.log(`http://localhost:3000/entreprise/${search.searchType}/${search.searchQuery}`);
@@ -53,6 +66,12 @@ const EnterpriseList = ({ search }) => {
         
     };
     fetchEnterprises();
+    /*
+    setTimeout(() => {
+      setEnterprises(data_enterprise);
+      setLoading(false);  // Arrêter le chargement
+    }, 2000);
+    */
   }, [search.searchQuery, search.searchType]);  // Dépendances pour déclencher l'effet
 
   if (loading) {
