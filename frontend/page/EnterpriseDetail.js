@@ -1,13 +1,58 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Linking } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const EnterpriseDetail = () => {
   const route = useRoute();
   const { enterprise } = route.params;
+  const [isFavorite, setIsFavorite] = useState(false); 
 
   const enterprise_idfit = enterprise.EnterpriseNumber.replace(/\./g, '');
+
+  useEffect(() => {
+    // Vérifier si l'entreprise est déjà marquée comme favorite
+    const checkIfFavorite = async () => {
+      try {
+        const storedFavorites = await AsyncStorage.getItem('favorites'); // Récupérer les favoris
+        const favorites = storedFavorites ? JSON.parse(storedFavorites) : [];
+        const isFavorite = favorites.some(fav => fav.EnterpriseNumber === enterprise.EnterpriseNumber);
+        setIsFavorite(isFavorite);
+      } catch (error) {
+        console.error('Erreur lors de la récupération des favoris:', error);
+      }
+    };
+
+    checkIfFavorite();
+  }, [enterprise]);
+
+  // Fonction pour basculer l'état favori
+  const toggleFavorite = async () => {
+    try {
+      const storedFavorites = await AsyncStorage.getItem('favorites');
+      const favorites = storedFavorites ? JSON.parse(storedFavorites) : [];
+
+      if (isFavorite) {
+        // Si l'entreprise est déjà favorite, on la retire des favoris
+        const updatedFavorites = favorites.filter(fav => fav.EnterpriseNumber !== enterprise.EnterpriseNumber);
+        await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+      } else {
+        // Sinon, on l'ajoute aux favoris
+        const updatedFavorites = [...favorites, enterprise];
+        await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+      }
+
+      setIsFavorite(!isFavorite); // Met à jour l'état local
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour des favoris:', error);
+    }
+  };
+
+  const openURL = (url) => {
+    Linking.openURL(url).catch(err => console.error("Couldn't load page", err));
+  };
+
   if (!enterprise) {
     return (
       <View style={styles.container}>
@@ -16,22 +61,26 @@ const EnterpriseDetail = () => {
     );
   }
 
-  // Fonction pour ouvrir les URLs
-  const openURL = (url) => {
-    Linking.openURL(url).catch(err => console.error("Couldn't load page", err));
-  };
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.header}>{enterprise.Denominations?.[0]?.Denomination || 'Nom non disponible'}</Text>
-        {enterprise.Logo && (
-          <Image source={{ uri: enterprise.Logo }} style={styles.logo} />
-        )}
+            {/* Ajouter le bouton étoile favori */}
+            <TouchableOpacity onPress={toggleFavorite}>
+            <Icon 
+              name={isFavorite ? 'star' : 'star-outline'} 
+              size={30} 
+              color={isFavorite ? 'yellow' : 'gray'} 
+              style={styles.favoriteIcon} 
+            />
+          </TouchableOpacity>
       </View>
 
       <View style={styles.card}>
-        <Text style={styles.subHeader}>Informations Générales</Text>
+        <View style={styles.infoContainer}>
+          <Text style={styles.subHeader}>Informations Générales</Text>
+        </View>
+
         <View style={styles.infoContainer}>
           <Icon name="briefcase" size={20} color="#555" />
           <Text style={styles.text}>Numéro d'Entreprise: {enterprise.EnterpriseNumber}</Text>
@@ -148,7 +197,9 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   headerContainer: {
-    alignItems: 'center',
+    flexDirection: 'row', // Alignement horizontal
+    alignItems: 'center', // Alignement vertical
+    justifyContent: 'space-between', // Espace entre le titre et le bouton favori
     marginBottom: 20,
   },
   header: {
@@ -156,12 +207,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
     textAlign: 'center',
+    flex: 1, // Permet au titre de prendre tout l'espace disponible
   },
-  logo: {
-    width: 100,
-    height: 100,
-    marginTop: 10,
-    borderRadius: 50,
+  favoriteIcon: {
+    marginLeft: 10, // Espacement entre le titre et le bouton étoile
   },
   card: {
     backgroundColor: '#fff',
@@ -201,8 +250,8 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   infoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'row', // Alignement horizontal
+    alignItems: 'center', // Alignement vertical
     marginBottom: 10,
   },
   button: {
